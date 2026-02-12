@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opera & Bubbles</title>
+    <style>
+      :root {
+        --bg-1: #0e0a1f;
+        --bg-2: #2c145f;
+        --bg-3: #6e1b73;
+        --text: #f6eeff;
+        --accent: #ffd5fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+        font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 20%, rgba(255, 190, 245, 0.22), transparent 35%),
+          radial-gradient(circle at 80% 10%, rgba(182, 134, 255, 0.2), transparent 35%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 52%, var(--bg-3));
+      }
+
+      canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        width: min(900px, 90vw);
+        margin: 12vh auto 0;
+        text-align: center;
+        padding: 2.5rem;
+        border-radius: 1.5rem;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 45px rgba(5, 3, 24, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(7px);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        letter-spacing: 0.02em;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+      }
+
+      p {
+        margin: 1rem auto 0;
+        font-size: clamp(1rem, 2.4vw, 1.25rem);
+        max-width: 55ch;
+        line-height: 1.6;
+        color: rgba(255, 232, 255, 0.95);
+      }
+
+      .hint {
+        margin-top: 1.4rem;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.92rem;
+        color: var(--accent);
+        border: 1px solid rgba(255, 213, 250, 0.35);
+        background: rgba(30, 10, 58, 0.35);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bubble-field" aria-hidden="true"></canvas>
+    <main class="content">
+      <h1>Opera &amp; Bubbles</h1>
+      <p>
+        A dreamy stage of shimmering bubbles dancing through velvet twilight. Move your
+        cursor and the bubbles sway away like performers responding to the conductor.
+      </p>
+      <span class="hint">Move your cursor to stir the bubbles ✨</span>
+    </main>
+
+    <script>
+      const canvas = document.getElementById("bubble-field");
+      const ctx = canvas.getContext("2d");
+
+      const mouse = { x: null, y: null, radius: 130 };
+      const bubbles = [];
+      const bubbleCount = 80;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      class Bubble {
+        constructor() {
+          this.reset(true);
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+        }
+
+        reset(initial = false) {
+          this.radius = Math.random() * 15 + 8;
+          this.vx = (Math.random() - 0.5) * 0.7;
+          this.vy = (Math.random() - 0.5) * 0.7;
+          this.opacity = Math.random() * 0.4 + 0.18;
+          this.glow = Math.random() * 16 + 8;
+          if (!initial) {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height + this.radius;
+            this.vy = -(Math.random() * 0.4 + 0.2);
+          }
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < -this.radius) this.x = canvas.width + this.radius;
+          if (this.x > canvas.width + this.radius) this.x = -this.radius;
+          if (this.y < -this.radius || this.y > canvas.height + this.radius) this.reset();
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < mouse.radius && dist > 0) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              const angle = Math.atan2(dy, dx);
+              this.x += Math.cos(angle) * force * 4;
+              this.y += Math.sin(angle) * force * 4;
+            }
+          }
+        }
+
+        draw() {
+          const gradient = ctx.createRadialGradient(
+            this.x - this.radius * 0.35,
+            this.y - this.radius * 0.35,
+            1,
+            this.x,
+            this.y,
+            this.radius + this.glow
+          );
+
+          gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity + 0.18})`);
+          gradient.addColorStop(0.35, `rgba(238, 216, 255, ${this.opacity})`);
+          gradient.addColorStop(1, "rgba(170, 125, 255, 0)");
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + this.glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity + 0.25})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.28})`;
+          ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.4, this.radius * 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function createBubbles() {
+        bubbles.length = 0;
+        for (let i = 0; i < bubbleCount; i += 1) {
+          bubbles.push(new Bubble());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const bubble of bubbles) {
+          bubble.update();
+          bubble.draw();
+        }
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener("mousemove", (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+      });
+
+      window.addEventListener("touchmove", (event) => {
+        if (event.touches.length > 0) {
+          mouse.x = event.touches[0].clientX;
+          mouse.y = event.touches[0].clientY;
+        }
+      });
+
+      window.addEventListener("mouseout", () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        createBubbles();
+      });
+
+      resizeCanvas();
+      createBubbles();
+      animate();
+    </script>
+  </body>
+</html>
