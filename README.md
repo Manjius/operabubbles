@@ -1,6 +1,9 @@
 # operabubbles
 
-A single-page website called **Opera & Bubbles** featuring a dramatic, operatic hero section and an interactive floating bubble field.
+A single-page website called **Opera & Bubbles** featuring:
+- an interactive bubble field that responds to your cursor
+- a dramatic hero section
+- a scrollable visual story with pictures and text panels
 
 ## Run locally
 
