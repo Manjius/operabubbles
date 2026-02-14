@@ -1,9 +1,9 @@
 # operabubbles
 
-A single-page website called **Opera & Bubbles** featuring:
-- an interactive bubble field that responds to your cursor
-- a dramatic hero section
-- a scrollable visual story with pictures and text panels
+A small static website project with two pages:
+
+- `index.html`: **Opera & Bubbles** landing page with interactive floating bubbles and a scrollable story.
+- `mario.html`: a small Mario-inspired platformer where Anna (`assets/anna.png`) rescues Luchok (`assets/luchok.png`) while avoiding Maurits enemies (`assets/maurits.png`).
 
 ## Run locally
 
@@ -11,4 +11,6 @@ A single-page website called **Opera & Bubbles** featuring:
 python3 -m http.server 4173
 ```
 
-Then open http://localhost:4173.
+Then open:
+- http://localhost:4173/
+- http://localhost:4173/mario.html
