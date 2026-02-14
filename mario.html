@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anna's Bubble Kingdom</title>
+    <style>
+      :root {
+        --sky-top: #8fd8ff;
+        --sky-bottom: #d3f0ff;
+        --ui: #1f2544;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #ffffff 0%, #cbe9ff 45%, #9cccf4 100%);
+        color: var(--ui);
+      }
+
+      .wrap {
+        width: min(1000px, 96vw);
+      }
+
+      h1 {
+        margin: 0 0 0.4rem;
+        text-align: center;
+        font-size: clamp(1.3rem, 3vw, 2rem);
+      }
+
+      p {
+        margin: 0 0 0.8rem;
+        text-align: center;
+      }
+
+      #game {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 4px solid #22305a;
+        border-radius: 12px;
+        image-rendering: pixelated;
+        background: linear-gradient(var(--sky-top), var(--sky-bottom));
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>Anna Rescues Luchok</h1>
+      <p>Move: A/D or ←/→ • Jump: W/↑/Space • Collect coins, avoid Maurits, save Luchok.</p>
+      <canvas id="game" width="960" height="540" aria-label="Platform game canvas"></canvas>
+    </main>
+
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+
+      const WORLD_WIDTH = 2200;
+      const FLOOR_Y = 460;
+      const GRAVITY = 0.65;
+
+      const keys = { left: false, right: false, jump: false };
+
+      const sprites = {
+        anna: new Image(),
+        luchok: new Image(),
+        maurits: new Image(),
+      };
+      sprites.anna.src = "assets/anna.png";
+      sprites.luchok.src = "assets/luchok.png";
+      sprites.maurits.src = "assets/maurits.png";
+
+      function makeLevel() {
+        return {
+          grounds: [
+            { x: 0, y: FLOOR_Y, w: 520, h: 80 },
+            { x: 610, y: FLOOR_Y, w: 360, h: 80 },
+            { x: 1040, y: FLOOR_Y, w: 280, h: 80 },
+            { x: 1410, y: FLOOR_Y, w: 410, h: 80 },
+            { x: 1860, y: FLOOR_Y, w: 340, h: 80 },
+            { x: 760, y: 370, w: 150, h: 20 },
+            { x: 1510, y: 350, w: 170, h: 20 },
+          ],
+          coinBoxes: [
+            { x: 250, y: 340, w: 50, h: 50, hit: false, bounce: 0 },
+            { x: 820, y: 290, w: 50, h: 50, hit: false, bounce: 0 },
+            { x: 1560, y: 270, w: 50, h: 50, hit: false, bounce: 0 },
+          ],
+          enemies: [
+            { x: 700, y: 420, w: 44, h: 40, vx: 1.1, minX: 625, maxX: 925 },
+            { x: 1110, y: 420, w: 44, h: 40, vx: 0.9, minX: 1050, maxX: 1265 },
+            { x: 1700, y: 420, w: 44, h: 40, vx: 1.2, minX: 1450, maxX: 1780 },
+          ],
+          princess: { x: 2060, y: 390, w: 48, h: 70 },
+        };
+      }
+
+      let level;
+      let player;
+      let coins;
+      let coinPopups;
+      let cameraX;
+      let gameOver;
+      let win;
+
+      function resetGame() {
+        level = makeLevel();
+        player = { x: 60, y: 390, w: 44, h: 62, vx: 0, vy: 0, onGround: false };
+        coins = 0;
+        coinPopups = [];
+        cameraX = 0;
+        gameOver = false;
+        win = false;
+      }
+
+      function intersects(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+      }
+
+      function updatePlayer() {
+        if (keys.left) player.vx = -3.2;
+        else if (keys.right) player.vx = 3.2;
+        else player.vx *= 0.75;
+
+        if (keys.jump && player.onGround) {
+          player.vy = -12.5;
+          player.onGround = false;
+        }
+
+        const prevX = player.x;
+        const prevY = player.y;
+
+        player.vy += GRAVITY;
+        player.x += player.vx;
+        player.y += player.vy;
+        player.onGround = false;
+
+        for (const g of level.grounds) {
+          if (!intersects(player, g)) continue;
+
+          const wasAbove = prevY + player.h <= g.y;
+          const wasBelow = prevY >= g.y + g.h;
+          const wasLeft = prevX + player.w <= g.x;
+          const wasRight = prevX >= g.x + g.w;
+
+          if (wasAbove) {
+            player.y = g.y - player.h;
+            player.vy = 0;
+            player.onGround = true;
+          } else if (wasBelow) {
+            player.y = g.y + g.h;
+            player.vy = Math.max(0, player.vy);
+          } else if (wasLeft) {
+            player.x = g.x - player.w;
+            player.vx = 0;
+          } else if (wasRight) {
+            player.x = g.x + g.w;
+            player.vx = 0;
+          }
+        }
+
+        for (const box of level.coinBoxes) {
+          if (!intersects(player, box)) continue;
+          const hitFromBelow = prevY >= box.y + box.h && player.y < box.y + box.h;
+          if (hitFromBelow) {
+            player.y = box.y + box.h;
+            player.vy = 1;
+            if (!box.hit) {
+              box.hit = true;
+              box.bounce = 7;
+              coins += 1;
+              coinPopups.push({ x: box.x + box.w / 2, y: box.y - 8, life: 34 });
+            }
+          }
+        }
+
+        for (const enemy of level.enemies) {
+          if (intersects(player, enemy)) {
+            gameOver = true;
+          }
+        }
+
+        if (intersects(player, level.princess)) {
+          win = true;
+        }
+
+        if (player.y > canvas.height + 120) {
+          gameOver = true;
+        }
+
+        player.x = Math.max(0, Math.min(WORLD_WIDTH - player.w, player.x));
+
+        cameraX = Math.max(0, Math.min(WORLD_WIDTH - canvas.width, player.x - canvas.width * 0.35));
+      }
+
+      function updateEnemies() {
+        for (const enemy of level.enemies) {
+          enemy.x += enemy.vx;
+          if (enemy.x <= enemy.minX || enemy.x + enemy.w >= enemy.maxX) {
+            enemy.vx *= -1;
+          }
+        }
+      }
+
+      function updateCoinBoxes() {
+        for (const box of level.coinBoxes) {
+          if (box.bounce > 0) box.bounce -= 1;
+        }
+
+        for (const popup of coinPopups) {
+          popup.y -= 1;
+          popup.life -= 1;
+        }
+        coinPopups = coinPopups.filter((p) => p.life > 0);
+      }
+
+      function drawImageOrFallback(img, x, y, w, h, color, label) {
+        if (img.complete && img.naturalWidth > 0) {
+          ctx.drawImage(img, x, y, w, h);
+          return;
+        }
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = "#fff";
+        ctx.font = "14px sans-serif";
+        ctx.fillText(label, x + 4, y + h / 2);
+      }
+
+      function drawWorld() {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#87d4ff");
+        gradient.addColorStop(1, "#d7f2ff");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save();
+        ctx.translate(-cameraX, 0);
+
+        for (const g of level.grounds) {
+          ctx.fillStyle = "#55a553";
+          ctx.fillRect(g.x, g.y, g.w, g.h);
+          ctx.fillStyle = "#3b7c3b";
+          ctx.fillRect(g.x, g.y, g.w, 12);
+        }
+
+        for (const box of level.coinBoxes) {
+          const offset = box.bounce > 0 ? Math.sin(box.bounce) * 6 : 0;
+          ctx.fillStyle = box.hit ? "#9d8155" : "#d2993e";
+          ctx.fillRect(box.x, box.y - offset, box.w, box.h);
+          ctx.strokeStyle = "#6f4e1f";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(box.x, box.y - offset, box.w, box.h);
+          if (!box.hit) {
+            ctx.fillStyle = "#fff6b0";
+            ctx.font = "bold 24px serif";
+            ctx.fillText("?", box.x + 16, box.y + 33 - offset);
+          }
+        }
+
+        for (const enemy of level.enemies) {
+          drawImageOrFallback(sprites.maurits, enemy.x, enemy.y, enemy.w, enemy.h, "#7a3f3f", "M");
+        }
+
+        drawImageOrFallback(
+          sprites.luchok,
+          level.princess.x,
+          level.princess.y,
+          level.princess.w,
+          level.princess.h,
+          "#c467bb",
+          "L"
+        );
+
+        drawImageOrFallback(sprites.anna, player.x, player.y, player.w, player.h, "#3e69b8", "A");
+
+        for (const popup of coinPopups) {
+          ctx.globalAlpha = Math.max(0, popup.life / 34);
+          ctx.fillStyle = "#ffd84d";
+          ctx.beginPath();
+          ctx.arc(popup.x, popup.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+
+        ctx.restore();
+
+        ctx.fillStyle = "#1c2344";
+        ctx.font = "bold 22px sans-serif";
+        ctx.fillText(`Coins: ${coins}`, 16, 32);
+
+        if (win) {
+          drawCenterMessage("You rescued Luchok! Press R to play again.");
+        } else if (gameOver) {
+          drawCenterMessage("You died! Press R to restart.");
+        }
+      }
+
+      function drawCenterMessage(text) {
+        ctx.fillStyle = "rgba(7, 16, 35, 0.7)";
+        ctx.fillRect(120, 210, canvas.width - 240, 120);
+        ctx.strokeStyle = "#ffffff";
+        ctx.strokeRect(120, 210, canvas.width - 240, 120);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 28px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(text, canvas.width / 2, 282);
+        ctx.textAlign = "left";
+      }
+
+      function loop() {
+        if (!gameOver && !win) {
+          updatePlayer();
+          updateEnemies();
+          updateCoinBoxes();
+        }
+
+        if (gameOver && !keys.jump && !keys.left && !keys.right) {
+          // no-op to keep frame updates predictable
+        }
+
+        drawWorld();
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "Space", "KeyA", "KeyD", "KeyW", "KeyR"].includes(e.code)) {
+          e.preventDefault();
+        }
+
+        if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
+        if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
+        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space") keys.jump = true;
+        if (e.code === "KeyR") resetGame();
+      });
+
+      window.addEventListener("keyup", (e) => {
+        if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
+        if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
+        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space") keys.jump = false;
+      });
+
+      resetGame();
+      loop();
+    </script>
+  </body>
+</html>

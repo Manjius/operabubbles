@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opera & Bubbles</title>
+    <style>
+      :root {
+        --bg-1: #0e0a1f;
+        --bg-2: #2c145f;
+        --bg-3: #6e1b73;
+        --text: #f6eeff;
+        --accent: #ffd5fa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 20%, rgba(255, 190, 245, 0.22), transparent 35%),
+          radial-gradient(circle at 80% 10%, rgba(182, 134, 255, 0.2), transparent 35%),
+          linear-gradient(160deg, var(--bg-1), var(--bg-2) 52%, var(--bg-3));
+      }
+
+      canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .page {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        place-items: start center;
+        padding-top: 12vh;
+      }
+
+      .content {
+        width: min(900px, 90vw);
+        text-align: center;
+        padding: 2.5rem;
+        border-radius: 1.5rem;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 45px rgba(5, 3, 24, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(7px);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        letter-spacing: 0.02em;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+      }
+
+      p {
+        margin: 1rem auto 0;
+        font-size: clamp(1rem, 2.4vw, 1.25rem);
+        max-width: 55ch;
+        line-height: 1.6;
+        color: rgba(255, 232, 255, 0.95);
+      }
+
+      .hint {
+        margin-top: 1.2rem;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.92rem;
+        color: var(--accent);
+        border: 1px solid rgba(255, 213, 250, 0.35);
+        background: rgba(30, 10, 58, 0.35);
+      }
+
+      .scroll-note {
+        margin-top: 1rem;
+        opacity: 0.9;
+        font-size: 0.95rem;
+      }
+
+      .gallery {
+        width: min(1100px, 92vw);
+        margin: 0 auto 6rem;
+        display: grid;
+        gap: 1.8rem;
+      }
+
+      .panel {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 1.3rem;
+        align-items: stretch;
+        border-radius: 1.2rem;
+        padding: 1rem;
+        background: rgba(13, 8, 35, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 14px 30px rgba(4, 2, 17, 0.4);
+        backdrop-filter: blur(5px);
+      }
+
+      .panel:nth-child(even) {
+        grid-template-columns: 1fr 1.2fr;
+      }
+
+      .panel:nth-child(even) .panel-image {
+        order: 2;
+      }
+
+      .panel-image {
+        width: 100%;
+        height: 100%;
+        min-height: 220px;
+        object-fit: cover;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .panel-text {
+        padding: 0.6rem 0.4rem;
+      }
+
+      .panel-text h2 {
+        margin: 0;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .panel-text p {
+        margin-top: 0.7rem;
+        font-size: 1rem;
+        text-align: left;
+      }
+
+      @media (max-width: 820px) {
+        .panel,
+        .panel:nth-child(even) {
+          grid-template-columns: 1fr;
+        }
+
+        .panel:nth-child(even) .panel-image {
+          order: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hint,
+        .scroll-note {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bubble-field" aria-hidden="true"></canvas>
+
+    <div class="page">
+      <main class="hero">
+        <section class="content">
+          <h1>Opera &amp; Bubbles</h1>
+          <p>
+            A dreamy stage of shimmering bubbles dancing through velvet twilight. Move your
+            cursor and the bubbles sway away like performers responding to the conductor.
+          </p>
+          <span class="hint">Move your cursor to stir the bubbles ✨</span>
+          <p class="scroll-note">Scroll down for the visual story ↓</p>
+        </section>
+      </main>
+
+      <section class="gallery" aria-label="Opera and bubbles story panels">
+        <article class="panel">
+          <img class="panel-image" src="assets/opera-stage.svg" alt="A dramatic opera stage with glowing violet lighting" />
+          <div class="panel-text">
+            <h2>Act I — Curtains Rise</h2>
+            <p>
+              Velvet shadows and luminous footlights set the mood as the first bubbles drift
+              into view. The stage feels alive, every shimmer a prelude to something grand.
+            </p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <img class="panel-image" src="assets/golden-notes.svg" alt="Golden music notes floating over a twilight scene" />
+          <div class="panel-text">
+            <h2>Act II — Aria in Gold</h2>
+            <p>
+              High notes sparkle like gilded pearls in the air, and each bubble catches the
+              music, carrying echoes of melody from one side of the hall to the other.
+            </p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <img class="panel-image" src="assets/sea-bubbles.svg" alt="A sea of glowing bubbles in deep blue and purple tones" />
+          <div class="panel-text">
+            <h2>Act III — The Floating Finale</h2>
+            <p>
+              As the final chorus swells, bubbles bloom like lanterns over midnight water.
+              The room exhales, the applause rises, and the dream lingers after the last note.
+            </p>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("bubble-field");
+      const ctx = canvas.getContext("2d");
+
+      const mouse = { x: null, y: null, radius: 130 };
+      const bubbles = [];
+      const bubbleCount = 95;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      class Bubble {
+        constructor() {
+          this.reset(true);
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+        }
+
+        reset(initial = false) {
+          this.radius = Math.random() * 15 + 8;
+          this.vx = (Math.random() - 0.5) * 0.7;
+          this.vy = (Math.random() - 0.5) * 0.7;
+          this.opacity = Math.random() * 0.4 + 0.18;
+          this.glow = Math.random() * 16 + 8;
+          if (!initial) {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height + this.radius;
+            this.vy = -(Math.random() * 0.4 + 0.2);
+          }
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < -this.radius) this.x = canvas.width + this.radius;
+          if (this.x > canvas.width + this.radius) this.x = -this.radius;
+          if (this.y < -this.radius || this.y > canvas.height + this.radius) this.reset();
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < mouse.radius && dist > 0) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              const angle = Math.atan2(dy, dx);
+              this.x += Math.cos(angle) * force * 4;
+              this.y += Math.sin(angle) * force * 4;
+            }
+          }
+        }
+
+        draw() {
+          const gradient = ctx.createRadialGradient(
+            this.x - this.radius * 0.35,
+            this.y - this.radius * 0.35,
+            1,
+            this.x,
+            this.y,
+            this.radius + this.glow
+          );
+
+          gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity + 0.18})`);
+          gradient.addColorStop(0.35, `rgba(238, 216, 255, ${this.opacity})`);
+          gradient.addColorStop(1, "rgba(170, 125, 255, 0)");
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + this.glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity + 0.25})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.28})`;
+          ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.4, this.radius * 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function createBubbles() {
+        bubbles.length = 0;
+        for (let i = 0; i < bubbleCount; i += 1) {
+          bubbles.push(new Bubble());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const bubble of bubbles) {
+          bubble.update();
+          bubble.draw();
+        }
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener("mousemove", (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+      });
+
+      window.addEventListener("touchmove", (event) => {
+        if (event.touches.length > 0) {
+          mouse.x = event.touches[0].clientX;
+          mouse.y = event.touches[0].clientY;
+        }
+      });
+
+      window.addEventListener("mouseout", () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        createBubbles();
+      });
+
+      resizeCanvas();
+      createBubbles();
+      animate();
+    </script>
+  </body>
+</html>
