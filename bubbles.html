@@ -157,18 +157,6 @@
         background-attachment: fixed;
       }
 
-      .hero::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        z-index: -1;
-        background-color: var(--hero-bg);
-        background-image: url("assets/pattern_leaves.png");
-        background-repeat: repeat;
-        background-position: center;
-        opacity: 0.85;
-        pointer-events: none;
-      }
 
       .hero__grid {
         width: min(1300px, 100%);
@@ -245,12 +233,6 @@
         .hero {
           min-height: auto;
           background-attachment: scroll;
-        }
-
-        .hero::before {
-          position: absolute;
-          inset: 0;
-          opacity: 0.6;
         }
 
         .intro-section__grid,
