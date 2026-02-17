@@ -87,12 +87,12 @@
 
       .mascot-cta {
         position: fixed;
-        top: 1rem;
-        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
+        align-items: flex-start;
         gap: 0.4rem;
       }
 
@@ -111,17 +111,17 @@
       .mascot-cta img {
         width: clamp(72px, 9vw, 110px);
         height: auto;
-        animation: mascot-tilt 1s ease-in-out infinite;
+        animation: mascot-zoom 0.5s ease-in-out infinite;
         transform-origin: center;
       }
 
-      @keyframes mascot-tilt {
+      @keyframes mascot-zoom {
         0%,
         100% {
-          transform: rotate(-45deg);
+          transform: scale(1);
         }
         50% {
-          transform: rotate(45deg);
+          transform: scale(1.12);
         }
       }
 
