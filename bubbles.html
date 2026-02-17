@@ -94,16 +94,7 @@
 
 
       .intro-section {
-        width: min(1300px, 100%);
-        margin: 1.2rem auto 0;
-        padding: 0 clamp(1.2rem, 4vw, 4rem);
-      }
-
-      .intro-section__grid {
-        display: grid;
-        grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
-        gap: clamp(1.5rem, 4vw, 4rem);
-        align-items: center;
+        padding: clamp(2rem, 6vw, 5rem) clamp(1.2rem, 4vw, 4rem);
       }
 
       .intro-section__text {
@@ -235,7 +226,6 @@
           background-attachment: scroll;
         }
 
-        .intro-section__grid,
         .hero__grid {
           grid-template-columns: 1fr;
         }
@@ -265,8 +255,8 @@
 
 
     <section class="intro-section" aria-labelledby="intro-section-title">
-      <div class="intro-section__grid">
-        <div class="intro-section__text">
+      <div class="hero__grid">
+        <div class="hero__content intro-section__text">
           <p>
             I'm so excited to invite you for the only secret opera brunch show in Eindhoven.
           </p>
@@ -329,7 +319,7 @@
           <p>Seats are very limited.</p>
         </div>
 
-        <div class="intro-section__media">
+        <div class="hero__media intro-section__media">
           <img src="blok1_image.png" alt="Opera & Bubbles brunch guests enjoying an immersive performance" />
         </div>
       </div>
