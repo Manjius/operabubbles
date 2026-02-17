@@ -87,16 +87,17 @@
 
       .mascot-cta {
         position: fixed;
-        top: 1rem;
-        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
+        align-items: flex-start;
         gap: 0.4rem;
       }
 
       .mascot-cta__bubble {
+        position: relative;
         max-width: min(280px, 72vw);
         padding: 0.6rem 0.75rem;
         border-radius: 0.8rem;
@@ -108,20 +109,33 @@
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
       }
 
+      .mascot-cta__bubble::after {
+        content: "";
+        position: absolute;
+        left: 1rem;
+        bottom: -7px;
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border-right: 1px solid rgba(58, 58, 58, 0.2);
+        border-bottom: 1px solid rgba(58, 58, 58, 0.2);
+        transform: rotate(45deg);
+      }
+
       .mascot-cta img {
         width: clamp(72px, 9vw, 110px);
         height: auto;
-        animation: mascot-tilt 1s ease-in-out infinite;
+        animation: mascot-zoom 0.75s ease-in-out infinite;
         transform-origin: center;
       }
 
-      @keyframes mascot-tilt {
+      @keyframes mascot-zoom {
         0%,
         100% {
-          transform: rotate(-45deg);
+          transform: scale(1);
         }
         50% {
-          transform: rotate(45deg);
+          transform: scale(1.12);
         }
       }
 
