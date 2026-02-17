@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Boozy Drag Brunch hero section with fixed patterned background and two-column layout."
+      content="5 reasons to join Opera & Bubbles in Eindhoven for a unique late-morning brunch performance."
     />
-    <title>Boozy Drag Brunch</title>
+    <title>Opera & Bubbles</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,6 +30,116 @@
         font-family: "Inter", "Open Sans", Arial, sans-serif;
         color: var(--hero-text);
         background-color: var(--hero-bg);
+      }
+
+      .page-title {
+        padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.2rem, 4vw, 4rem) 0;
+        text-align: center;
+      }
+
+      .page-title h1 {
+        margin: 0;
+        font-family: "Great Vibes", "Times New Roman", serif;
+        font-size: clamp(2.2rem, 6vw, 4.2rem);
+        font-weight: 400;
+        color: #000;
+        line-height: 1.12;
+      }
+
+      .page-title p {
+        margin: 0.35rem 0 0;
+        font-size: clamp(1rem, 2.1vw, 1.3rem);
+        color: #000;
+      }
+
+      .mascot-cta {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+      }
+
+      .mascot-cta__bubble {
+        max-width: min(280px, 72vw);
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.8rem;
+        border: 1px solid rgba(58, 58, 58, 0.2);
+        background: rgba(255, 255, 255, 0.95);
+        font-size: 0.9rem;
+        line-height: 1.35;
+        color: #000;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+      }
+
+      .mascot-cta img {
+        width: clamp(72px, 9vw, 110px);
+        height: auto;
+        animation: mascot-tilt 1s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      @keyframes mascot-tilt {
+        0%,
+        100% {
+          transform: rotate(-45deg);
+        }
+        50% {
+          transform: rotate(45deg);
+        }
+      }
+
+
+      .intro-section {
+        width: min(1300px, 100%);
+        margin: 1.2rem auto 0;
+        padding: 0 clamp(1.2rem, 4vw, 4rem);
+      }
+
+      .intro-section__grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+        gap: clamp(1.5rem, 4vw, 4rem);
+        align-items: center;
+      }
+
+      .intro-section__text {
+        line-height: 1.65;
+        font-size: clamp(0.98rem, 2vw, 1.08rem);
+        color: #000;
+      }
+
+      .intro-section__text h2 {
+        margin: 1.2rem 0 0.65rem;
+        font-family: "Great Vibes", "Times New Roman", serif;
+        font-size: clamp(1.9rem, 4.6vw, 3rem);
+        font-weight: 400;
+        color: #000;
+        line-height: 1.1;
+      }
+
+      .intro-section__text p {
+        margin: 0 0 0.95rem;
+      }
+
+      .intro-section__text ul {
+        margin: 0.2rem 0 1rem;
+        padding-left: 1.25rem;
+      }
+
+      .intro-section__text li {
+        margin-bottom: 0.45rem;
+      }
+
+      .intro-section__media img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        min-height: 420px;
+        object-fit: cover;
       }
 
       .hero {
@@ -112,6 +222,21 @@
         margin: 0 0 1rem;
       }
 
+      .hero__body ol {
+        margin: 0 0 1rem;
+        padding-left: 1.25rem;
+      }
+
+      .hero__body li {
+        margin-bottom: 0.9rem;
+      }
+
+      .hero__body li em {
+        display: block;
+        font-style: italic;
+        font-weight: 500;
+      }
+
       .hero__body p:last-child {
         margin-bottom: 0;
       }
@@ -128,10 +253,12 @@
           opacity: 0.6;
         }
 
+        .intro-section__grid,
         .hero__grid {
           grid-template-columns: 1fr;
         }
 
+        .intro-section__media img,
         .hero__media img {
           min-height: 280px;
           aspect-ratio: 16 / 10;
@@ -144,31 +271,130 @@
     </style>
   </head>
   <body>
-    <section class="hero" aria-labelledby="boozy-drag-brunch-title">
+    <div class="mascot-cta" aria-label="Booking reminder">
+      <div class="mascot-cta__bubble">Hurry to book your ticket for my first brunch show ever!</div>
+      <img src="face_asset.png" alt="Animated character reminding guests to book" />
+    </div>
+
+    <header class="page-title" aria-labelledby="page-main-title">
+      <h1 id="page-main-title">Opera &amp; Bubbles: Audition edition</h1>
+      <p>A brunch show where you are the chosen one</p>
+    </header>
+
+
+    <section class="intro-section" aria-labelledby="intro-section-title">
+      <div class="intro-section__grid">
+        <div class="intro-section__text">
+          <p>
+            I'm so excited to invite you for the only secret opera brunch show in Eindhoven.
+          </p>
+          <p>
+            Opera &amp; Bubbles is a unique brunch show that blends opera, musical, storytelling, and audience
+            interaction into one fun theatrical experience.
+          </p>
+          <p>
+            You are not just watching a performance, not only sipping prosecco and enjoying your brunch. You are
+            inside an audition!
+          </p>
+
+          <h2 id="intro-section-title">What is Opera &amp; Bubbles brunch show</h2>
+          <p>Not your usual evening concert.</p>
+          <p>Not a polite cultural obligation.</p>
+          <p>Not something that ruins your sleep schedule.</p>
+          <p>This is your most elegant weekend decision.</p>
+
+          <p>
+            With a glass of Prosecco or something sparkling and innocent you gonna experience opera, but closer than
+            you expect.
+          </p>
+          <p>Musical, but warmer than you remember.</p>
+          <p>
+            A voice (my voice) that moves between seduction and laughter ( evil malicious laughter tbh).
+          </p>
+          <p>
+            A story that unfolds chaotically between music,your chair and bubbles.
+          </p>
+
+          <p>
+            Discover a secret brunch show that only happens in Eindhoven, in Klokgebouw in Blue Collar Theater.
+          </p>
+
+          <h2>The Experience</h2>
+          <p>Over approximately two to two and a half hours, you will experience:</p>
+          <ul>
+            <li>A relaxed brunch with soup, sandwiches, snacks, dessert and endless bubbles</li>
+            <li>Live opera and musical performed by Anna Karnovska up close</li>
+            <li>Theater with professional performers</li>
+            <li>Audience participation that is playful and surely optional</li>
+            <li>Moments of humor, honesty, and recognition</li>
+          </ul>
+
+          <h2>About the Music</h2>
+          <p>The show features a mix of:</p>
+          <ul>
+            <li>Classical opera arias</li>
+            <li>Musical theatre</li>
+            <li>Jazz</li>
+            <li>Piano solos</li>
+            <li>Theatre moments</li>
+          </ul>
+
+          <p>Come as you are.</p>
+          <p>Eat well.</p>
+          <p>Drink bubbles.</p>
+          <p>Listen closely.</p>
+
+          <p>Seats are very limited.</p>
+        </div>
+
+        <div class="intro-section__media">
+          <img src="blok1_image.png" alt="Opera & Bubbles brunch guests enjoying an immersive performance" />
+        </div>
+      </div>
+    </section>
+
+    <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
       <div class="hero__grid">
         <div class="hero__media">
           <img
             src="assets/brunch-photo.jpg"
-            alt="Guests raising brunch cocktails at a lively drag brunch table"
+            alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
           />
         </div>
 
         <div class="hero__content">
           <div class="hero__rule" aria-hidden="true"></div>
-          <h1 id="boozy-drag-brunch-title" class="hero__title">Boozy Drag Brunch</h1>
+          <h2 id="opera-bubbles-reasons-title" class="hero__title">5 Reasons to Join Opera &amp; Bubbles</h2>
 
           <div class="hero__body">
-            <p>
-              Glittering performances, playful toasts, and a decadent brunch spread come together in one unforgettable
-              daytime party.
-            </p>
-            <p>
-              Settle in for dazzling lip-sync numbers, high-energy choreography, and charismatic hosting while sipping
-              your favorite bubbles.
-            </p>
-            <p>
-              Bring your crew, dress to impress, and make room for laughter, applause, and a little fabulous chaos.
-            </p>
+            <ol>
+              <li>
+                <em>It’s an absolutely unique brunch experience</em>
+                You enjoy a full brunch while listening to live opera, musical theatre and theatrical drama. Not
+                background music. A real performance. For the price of a simple restaurant visit.
+              </li>
+              <li>
+                <em>It’s a special late morning plan</em>
+                No late nights. No rushing next morning. Just a beautiful, slow weekend morning filled with music,
+                bubbles and nice atmosphere.
+              </li>
+              <li>
+                <em>It’s in the heart of Eindhoven</em>
+                Located in the iconic Klokgebouw, right in the vibrant Strijp-s .Easy to reach, impossible to forget.
+              </li>
+              <li>
+                <em>It’s perfect for dates, friends or colleagues</em>
+                Make memories with your partner. Laugh with your best friends and siblings. Surprise your colleagues.
+                It works for everyone.
+              </li>
+              <li>
+                <em>It’s interactive, memorable and welcoming</em>
+                You are gently included, never pressured. The atmosphere is warm, safe and inviting, whether you love
+                opera or have never heard it live before.
+              </li>
+            </ol>
+            <p>Opera &amp; Bubbles is not just brunch.</p>
+            <p>It’s culture, connection and experience — all in one morning.</p>
           </div>
         </div>
       </div>
