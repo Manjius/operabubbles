@@ -125,16 +125,17 @@
       .mascot-cta img {
         width: clamp(72px, 9vw, 110px);
         height: auto;
-        animation: mascot-zoom 2s ease-in-out infinite;
+        animation: mascot-zoom 2.75s ease-in-out infinite;
         transform-origin: center;
       }
 
       @keyframes mascot-zoom {
         0%,
+        72.73%,
         100% {
           transform: scale(1);
         }
-        50% {
+        36.36% {
           transform: scale(1.12);
         }
       }
