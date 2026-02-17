@@ -32,6 +32,18 @@
         background-color: var(--hero-bg);
       }
 
+      .top-header-image {
+        width: 100%;
+        height: clamp(220px, 45vw, 520px);
+      }
+
+      .top-header-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
       .page-title {
         padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.2rem, 4vw, 4rem) 0;
         text-align: center;
@@ -263,6 +275,10 @@
     </style>
   </head>
   <body>
+    <div class="top-header-image" aria-hidden="true">
+      <img src="assets/header_image.jpeg" alt="" />
+    </div>
+
     <div class="mascot-cta" aria-label="Booking reminder">
       <div class="mascot-cta__bubble">Hurry to book your ticket for my first brunch show ever!</div>
       <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
