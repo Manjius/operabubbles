@@ -52,6 +52,39 @@
         color: #000;
       }
 
+      .title-dock-sentinel {
+        height: 1px;
+      }
+
+      .title-dock {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: 0.95rem clamp(1.2rem, 4vw, 4rem);
+        background: rgba(0, 0, 0, 0);
+        transition: background-color 320ms ease, box-shadow 320ms ease;
+      }
+
+      .title-dock.is-stuck {
+        background: rgba(0, 0, 0, 0.88);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .title-dock__brand,
+      .title-dock__menu {
+        font-size: clamp(0.92rem, 2.1vw, 1.1rem);
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        color: #fff;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
       .mascot-cta {
         position: fixed;
         top: 1rem;
@@ -235,6 +268,11 @@
       <p>A brunch show where you are the chosen one</p>
     </header>
 
+    <div class="title-dock-sentinel" aria-hidden="true"></div>
+    <div class="title-dock" id="title-dock" aria-label="Main title actions">
+      <span class="title-dock__brand">Opera and Bubbles</span>
+      <a class="title-dock__menu" href="#">Menu</a>
+    </div>
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
@@ -373,5 +411,18 @@
         </div>
       </div>
     </section>
+    <script>
+      const titleDock = document.getElementById("title-dock");
+      const titleDockSentinel = document.querySelector(".title-dock-sentinel");
+
+      const titleDockObserver = new IntersectionObserver(
+        ([entry]) => {
+          titleDock.classList.toggle("is-stuck", !entry.isIntersecting);
+        },
+        { threshold: 0 }
+      );
+
+      titleDockObserver.observe(titleDockSentinel);
+    </script>
   </body>
 </html>
