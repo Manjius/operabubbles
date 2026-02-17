@@ -197,11 +197,19 @@
       @media (max-width: 900px) {
         .hero {
           min-height: auto;
-          background-attachment: scroll;
+          background-attachment: fixed;
         }
 
         .hero__grid {
           grid-template-columns: 1fr;
+        }
+
+        .hero__content {
+          order: 1;
+        }
+
+        .hero__media {
+          order: 2;
         }
 
         .intro-section__media img,
