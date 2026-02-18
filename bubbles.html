@@ -632,8 +632,13 @@
         const spawnJitterMs = 420;
         const nextSpawnAt = new Map(rails.map((rail) => [rail, Math.random() * (spawnDelayMs + spawnJitterMs)]));
         const baseRiseSpeed = 102;
+        const railRiseSpeed = new Map(rails.map((rail) => [rail, baseRiseSpeed * (1 + Math.random() * 2)]));
         const scrollModeHoldMs = 180;
         const maxBubbles = 72;
+        const staticBubbleChance = 0.28;
+        const minStopRatio = 0.35;
+        const maxStopRatio = 0.72;
+        const staticPopChancePerSecond = 0.11;
         let scrollMode = 'idle';
         let scrollModeUntil = 0;
         let lastTimestamp;
@@ -662,7 +667,9 @@
 
         const makeBubble = (rail) => {
           if (bubbles.length >= maxBubbles) {
-            popBubble(bubbles[0], 140);
+            const movingBubble = bubbles.find((bubble) => !bubble.popping && !bubble.stopped);
+            const staticBubble = bubbles.find((bubble) => !bubble.popping);
+            popBubble(movingBubble || staticBubble, 140);
             return;
           }
 
@@ -683,6 +690,11 @@
             x: offsetX,
             y: rail.clientHeight - size,
             popping: false,
+            stopped: false,
+            shouldStop: Math.random() < staticBubbleChance,
+            stopY:
+              rail.clientHeight * (minStopRatio + Math.random() * (maxStopRatio - minStopRatio)) -
+              size,
           };
 
           bubbleEl.addEventListener('pointerdown', () => popBubble(bubble));
@@ -747,7 +759,19 @@
             const bubble = bubbles[i];
             if (bubble.popping) continue;
 
-            bubble.y -= baseRiseSpeed * riseMultiplier * dt;
+            if (!bubble.stopped) {
+              const riseSpeed = (railRiseSpeed.get(bubble.rail) || baseRiseSpeed) * riseMultiplier;
+              bubble.y -= riseSpeed * dt;
+
+              if (bubble.shouldStop && bubble.y <= bubble.stopY) {
+                bubble.y = bubble.stopY;
+                bubble.stopped = true;
+              }
+            } else if (Math.random() < staticPopChancePerSecond * dt) {
+              popBubble(bubble, 180);
+              continue;
+            }
+
             bubble.el.style.transform = `translate3d(${bubble.x}px, ${bubble.y}px, 0)`;
 
             if (bubble.y + bubble.size <= 2) {
