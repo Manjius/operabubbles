@@ -81,7 +81,7 @@
       .mascot-cta--entering {
         opacity: 1;
         visibility: visible;
-        animation: mascot-entry 2.8s ease-in-out forwards;
+        animation: mascot-entry 3.8s ease-in-out forwards;
       }
 
       .mascot-cta--active {
@@ -158,19 +158,31 @@
 
       @keyframes mascot-entry {
         0% {
-          transform: translate(0, 0) scale(3.2);
+          transform: translate(0, 0) scale(0.06);
         }
-        18% {
-          transform: translate(11vw, -8vh) scale(2.8);
+        16% {
+          transform: translate(0, 0) scale(2.8);
         }
-        36% {
-          transform: translate(24vw, -2vh) scale(2.35);
+        26% {
+          transform: translate(12vw, -8vh) scale(2.5);
         }
-        54% {
-          transform: translate(46vw, -19vh) scale(1.9);
+        34% {
+          transform: translate(12vw, -20vh) scale(2.25);
         }
-        72% {
-          transform: translate(66vw, -10vh) scale(1.45);
+        42% {
+          transform: translate(3vw, -26vh) scale(2.05);
+        }
+        50% {
+          transform: translate(-6vw, -20vh) scale(1.9);
+        }
+        58% {
+          transform: translate(-10vw, -8vh) scale(1.75);
+        }
+        66% {
+          transform: translate(-4vw, 4vh) scale(1.6);
+        }
+        74% {
+          transform: translate(8vw, 8vh) scale(1.45);
         }
         100% {
           transform: translate(calc(100vw - 11rem), calc(-50vh + 5rem)) scale(1);
