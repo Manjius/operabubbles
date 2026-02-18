@@ -422,13 +422,19 @@
         }
 
         .fixed-menu {
-          align-items: flex-start;
-          flex-direction: column;
+          display: flex;               /* in case it isn’t already */
+          flex-direction: row;         /* key change */
+          align-items: center;         /* vertical align */
+          justify-content: space-between;
+          gap: 0.8rem;
           padding: 0.7rem 0.85rem;
         }
 
         .menu-message {
-          text-align: left;
+          margin:0;
+          flex:1 1 auto;          /* text takes remaining space */
+          text-align:right;
+          min-width:0;            /* allows wrapping instead of pushing layout */
         }
       }
 
@@ -440,7 +446,7 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
-      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Secure your<br>ticket gurl!!</a>
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><Strong>Secure your<br>ticket gurl!!</Strong></Strong></a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
@@ -611,8 +617,8 @@
         </a>
       </div>
       <p class="menu-message">
-        Do you have special dietary wishes? Do you want information? Our contact is:
-        <a href="mailto:anna.karnowska@gmail.com">anna.karnowska@gmail.com</a>.
+        Special dietary wishes? Our contact is:
+        <a href="mailto:anna.karnovska@gmail.com">anna.karnovska@gmail.com</a>.
       </p>
     </footer>
 
