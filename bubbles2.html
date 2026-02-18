@@ -64,87 +64,15 @@
         color: #000;
       }
 
-      .title-dock-sentinel {
-        height: 1px;
-      }
-
-      .title-dock {
-        position: sticky;
-        top: 0;
-        z-index: 30;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        margin: 0;
-        padding: 0.95rem clamp(1.2rem, 4vw, 4rem);
-        background: rgba(0, 0, 0, 0);
-        transition: background-color 320ms ease, box-shadow 320ms ease;
-      }
-
-      .title-dock.is-stuck {
-        background: rgba(0, 0, 0, 0.88);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-      }
-
-      .title-dock__brand,
-      .title-dock__menu {
-        font-size: clamp(0.92rem, 2.1vw, 1.1rem);
-        text-transform: uppercase;
-        letter-spacing: 0.11em;
-        color: #fff;
-        font-weight: 700;
-        text-decoration: none;
-      }
-
-      .title-dock__menu-wrap {
-        position: relative;
-      }
-
-      .title-dock__menu {
-        border: 0;
-        background: transparent;
-        cursor: pointer;
-      }
-
-      .title-dock__dropdown {
-        position: absolute;
-        right: 0;
-        top: calc(100% + 0.4rem);
-        min-width: 180px;
-        margin: 0;
-        padding: 0.45rem 0;
-        border-radius: 0.5rem;
-        list-style: none;
-        background: rgba(0, 0, 0, 0.9);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-      }
-
-      .title-dock__dropdown[hidden] {
-        display: none;
-      }
-
-      .title-dock__dropdown-link {
-        display: block;
-        padding: 0.45rem 0.8rem;
-        color: #fff;
-        text-decoration: none;
-        font-size: 0.95rem;
-      }
-
-      .title-dock__dropdown-link:hover,
-      .title-dock__dropdown-link:focus-visible {
-        background: rgba(255, 255, 255, 0.14);
-      }
 
       .mascot-cta {
         position: fixed;
-        bottom: 1rem;
-        left: 1rem;
+        top: 1rem;
+        right: 1rem;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end;
         gap: 0.4rem;
       }
 
@@ -166,7 +94,7 @@
       .mascot-cta__bubble::after {
         content: "";
         position: absolute;
-        left: 1rem;
+        right: 1rem;
         bottom: -7px;
         width: 12px;
         height: 12px;
@@ -266,7 +194,7 @@
       }
 
       .hero__body {
-        font-size: clamp(1rem, 2.1vw, 1.12rem);
+        font-size: calc(clamp(1rem, 2.1vw, 1.12rem) + 2px);
         line-height: 1.75;
       }
 
@@ -323,7 +251,7 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder">
-      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Hurry to book your ticket for my first brunch show ever!</a>
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Click me to secure your early bird tickets!!</a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
@@ -334,19 +262,6 @@
       <p>A brunch show where you are the chosen one</p>
     </header>
 
-    <div class="title-dock-sentinel" aria-hidden="true"></div>
-    <div class="title-dock" id="title-dock" aria-label="Main title actions">
-      <span class="title-dock__brand">Opera and Bubbles</span>
-      <div class="title-dock__menu-wrap">
-        <button class="title-dock__menu" id="menu-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu-dropdown">Menu</button>
-        <ul class="title-dock__dropdown" id="menu-dropdown" hidden>
-          <li><a class="title-dock__dropdown-link" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
-          <li><a class="title-dock__dropdown-link" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
-          <li><a class="title-dock__dropdown-link" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
-          <li><a class="title-dock__dropdown-link" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
-        </ul>
-      </div>
-    </div>
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
@@ -485,33 +400,5 @@
         </div>
       </div>
     </section>
-    <script>
-      const titleDock = document.getElementById("title-dock");
-      const titleDockSentinel = document.querySelector(".title-dock-sentinel");
-      const menuToggle = document.getElementById("menu-toggle");
-      const menuDropdown = document.getElementById("menu-dropdown");
-
-      const titleDockObserver = new IntersectionObserver(
-        ([entry]) => {
-          titleDock.classList.toggle("is-stuck", !entry.isIntersecting);
-        },
-        { threshold: 0 }
-      );
-
-      titleDockObserver.observe(titleDockSentinel);
-
-      menuToggle.addEventListener("click", () => {
-        const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
-        menuToggle.setAttribute("aria-expanded", String(!isOpen));
-        menuDropdown.hidden = isOpen;
-      });
-
-      document.addEventListener("click", (event) => {
-        if (!event.target.closest(".title-dock__menu-wrap")) {
-          menuToggle.setAttribute("aria-expanded", "false");
-          menuDropdown.hidden = true;
-        }
-      });
-    </script>
   </body>
 </html>
