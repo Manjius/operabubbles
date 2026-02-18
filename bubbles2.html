@@ -28,8 +28,8 @@
 
       body {
         margin: 0;
-        font-family: "Aqua Grotesque";
-        font-weight: 400;
+        font-family: "Roboto Slab";
+        font-weight: 100;
         color: var(--hero-text);
         background-color: var(--hero-bg);
       }
@@ -51,9 +51,9 @@
 
       .page-title h1 {
         margin: 0;
-        font-family: "Roboto Slab";
+        font-family: "Aqua Grotesque";
         font-size: clamp(2.2rem, 6vw, 4.2rem);
-        font-weight: 100;
+        font-weight: 400;
         color: #000;
         line-height: 1.12;
       }
@@ -64,51 +64,20 @@
         color: #000;
       }
 
-      .title-dock-sentinel {
-        height: 1px;
-      }
-
-      .title-dock {
-        position: sticky;
-        top: 0;
-        z-index: 30;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        margin: 0;
-        padding: 0.95rem clamp(1.2rem, 4vw, 4rem);
-        background: rgba(0, 0, 0, 0);
-        transition: background-color 320ms ease, box-shadow 320ms ease;
-      }
-
-      .title-dock.is-stuck {
-        background: rgba(0, 0, 0, 0.88);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-      }
-
-      .title-dock__brand,
-      .title-dock__menu {
-        font-size: clamp(0.92rem, 2.1vw, 1.1rem);
-        text-transform: uppercase;
-        letter-spacing: 0.11em;
-        color: #fff;
-        font-weight: 700;
-        text-decoration: none;
-      }
 
       .mascot-cta {
         position: fixed;
-        bottom: 1rem;
-        left: 1rem;
+        top: 1rem;
+        right: 1rem;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end;
         gap: 0.4rem;
       }
 
       .mascot-cta__bubble {
+        display: block;
         position: relative;
         max-width: min(280px, 72vw);
         padding: 0.6rem 0.75rem;
@@ -119,12 +88,13 @@
         line-height: 1.35;
         color: #000;
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
       }
 
       .mascot-cta__bubble::after {
         content: "";
         position: absolute;
-        left: 1rem;
+        right: 1rem;
         bottom: -7px;
         width: 12px;
         height: 12px;
@@ -135,6 +105,7 @@
       }
 
       .mascot-cta img {
+        display: block;
         width: clamp(72px, 9vw, 110px);
         height: auto;
         animation: mascot-zoom 2.75s ease-in-out infinite;
@@ -155,9 +126,9 @@
 
       .intro-section__subheading {
         margin: 1.4rem 0 0.75rem;
-        font-family: "Roboto Slab";
+        font-family: "Aqua Grotesque";
         font-size: clamp(2rem, 4.8vw, 3.2rem);
-        font-weight: 100;
+        font-weight: 400;
         line-height: 1.1;
         color: var(--hero-gold);
       }
@@ -215,15 +186,15 @@
       .hero__title {
         margin: 0 0 1.5rem;
         text-align: center;
-        font-family: "Roboto Slab";
+        font-family: "Aqua Grotesque";
         font-size: clamp(2.4rem, 6vw, 4.5rem);
-        font-weight: 100;
+        font-weight: 400;
         line-height: 1.1;
         color: var(--hero-gold);
       }
 
       .hero__body {
-        font-size: clamp(1rem, 2.1vw, 1.12rem);
+        font-size: calc(clamp(1rem, 2.1vw, 1.12rem) + 2px);
         line-height: 1.75;
       }
 
@@ -280,8 +251,10 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder">
-      <div class="mascot-cta__bubble">Hurry to book your ticket for my first brunch show ever!</div>
-      <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Click me to secure your early bird tickets!!</a>
+      <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
+        <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
+      </a>
     </div>
 
     <header class="page-title" aria-labelledby="page-main-title">
@@ -289,11 +262,6 @@
       <p>A brunch show where you are the chosen one</p>
     </header>
 
-    <div class="title-dock-sentinel" aria-hidden="true"></div>
-    <div class="title-dock" id="title-dock" aria-label="Main title actions">
-      <span class="title-dock__brand">Opera and Bubbles</span>
-      <a class="title-dock__menu" href="#">Menu</a>
-    </div>
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
@@ -432,18 +400,5 @@
         </div>
       </div>
     </section>
-    <script>
-      const titleDock = document.getElementById("title-dock");
-      const titleDockSentinel = document.querySelector(".title-dock-sentinel");
-
-      const titleDockObserver = new IntersectionObserver(
-        ([entry]) => {
-          titleDock.classList.toggle("is-stuck", !entry.isIntersecting);
-        },
-        { threshold: 0 }
-      );
-
-      titleDockObserver.observe(titleDockSentinel);
-    </script>
   </body>
 </html>
