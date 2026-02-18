@@ -462,7 +462,8 @@
 
         const bubbles = [];
         const spawnDelayMs = 950;
-        const spawnTimers = new Map(rails.map((rail) => [rail, Math.random() * spawnDelayMs]));
+        const spawnJitterMs = 420;
+        const nextSpawnAt = new Map(rails.map((rail) => [rail, Math.random() * (spawnDelayMs + spawnJitterMs)]));
         const baseRiseSpeed = 102;
         const scrollModeHoldMs = 180;
         const maxBubbles = 72;
@@ -565,12 +566,13 @@
           }
 
           rails.forEach((rail) => {
-            const next = spawnTimers.get(rail) + dt * 1000;
-            if (next >= spawnDelayMs) {
+            const next = nextSpawnAt.get(rail) - dt * 1000;
+            if (next <= 0) {
               makeBubble(rail);
-              spawnTimers.set(rail, next - spawnDelayMs);
+              const randomizedDelay = spawnDelayMs + Math.random() * spawnJitterMs;
+              nextSpawnAt.set(rail, randomizedDelay);
             } else {
-              spawnTimers.set(rail, next);
+              nextSpawnAt.set(rail, next);
             }
           });
 
