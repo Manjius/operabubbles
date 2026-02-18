@@ -37,6 +37,7 @@
 
       .top-header-image {
         width: 100%;
+        overflow: hidden;
       }
 
       .top-header-image img {
@@ -82,6 +83,10 @@
         font-family: "Josefin Sans";
         font-size: clamp(1.05rem, 2vw, 1.2rem);
         font-weight: 900;
+      }
+
+      .event-meta__item {
+        text-align: center;
       }
 
       .event-meta__item p {
@@ -413,6 +418,14 @@
         color: var(--hero-bg);
       }
 
+
+      @media (min-width: 901px) {
+        .top-header-image img {
+          margin-top: -40px;
+          margin-bottom: -400px;
+        }
+      }
+
       @media (max-width: 900px) {
         .event-meta__grid {
           grid-template-columns: repeat(2, minmax(180px, 1fr));
@@ -518,9 +531,8 @@
 
         <article class="event-meta__item">
           <h3>Venue</h3>
-          <p>Blue Collar Theater in Klokgebouw</p>
           <p>
-            <a href="https://maps.app.goo.gl/FtKEz1qm4nXC1wRy6" target="_blank" rel="noopener noreferrer">https://maps.app.goo.gl/FtKEz1qm4nXC1wRy6</a>
+            <a href="https://maps.app.goo.gl/FtKEz1qm4nXC1wRy6" target="_blank" rel="noopener noreferrer">Blue Collar Theater in Klokgebouw</a>
           </p>
         </article>
 
