@@ -76,12 +76,18 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+        will-change: transform;
       }
 
       .mascot-cta--entering {
+        top: 50%;
+        right: 1rem;
+        bottom: auto;
+        left: auto;
         opacity: 1;
         visibility: visible;
-        animation: mascot-entry 3.8s ease-in-out forwards;
+        /*animation: mascot-entry 3.8s ease-in-out forwards;*/
+        animation: mascot-entry 2s linear forwards;
       }
 
       .mascot-cta--active {
@@ -157,36 +163,14 @@
       }
 
       @keyframes mascot-entry {
-        0% {
-          transform: translate(0, 0) scale(0.06);
-        }
-        16% {
-          transform: translate(0, 0) scale(2.8);
-        }
-        26% {
-          transform: translate(12vw, -8vh) scale(2.5);
-        }
-        34% {
-          transform: translate(12vw, -20vh) scale(2.25);
-        }
-        42% {
-          transform: translate(3vw, -26vh) scale(2.05);
-        }
-        50% {
-          transform: translate(-6vw, -20vh) scale(1.9);
-        }
-        58% {
-          transform: translate(-10vw, -8vh) scale(1.75);
-        }
-        66% {
-          transform: translate(-4vw, 4vh) scale(1.6);
-        }
-        74% {
-          transform: translate(8vw, 8vh) scale(1.45);
-        }
-        100% {
-          transform: translate(calc(100vw - 11rem), calc(-50vh + 5rem)) scale(1);
-        }
+        0%   { transform: translate(-60vw, -13vh) scale(0.06); }
+        20%  { transform: translate(-60vw, -13vh) scale(2.8); }
+        40%  { transform: translate(-40vw, -13vh) scale(1); }
+        55%  { transform: translate(-30vw, -13vh) scale(2.8); }
+        70%  { transform: translate(-20vw, -13vh) scale(1); }
+        85%  { transform: translate(-10vw, -13vh) scale(2.8); }
+        100% { transform: translateY(-50%) scale(1); }
+        /*100% { transform: translate(calc(100vw - 11rem), calc(-50vh + 5rem)) scale(1); }*/
       }
 
 
@@ -316,7 +300,7 @@
       <img src="assets/header_image.jpg" alt="" />
     </div>
 
-    <div class="mascot-cta" aria-label="Booking reminder">
+    <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
       <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Secure your<br>ticket gurl!!</a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
