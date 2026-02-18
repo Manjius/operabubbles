@@ -234,8 +234,8 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        width: clamp(48px, 7vw, 76px);
-        overflow: hidden;
+        width: clamp(64px, 8vw, 92px);
+        overflow: visible;
       }
 
       .bubble-rail--left {
@@ -249,30 +249,26 @@
       .champagne-bubble {
         position: absolute;
         left: 50%;
+        padding: 0;
         border-radius: 50%;
+        aspect-ratio: 1 / 1;
         border: 1px solid rgba(255, 255, 255, 0.8);
         background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.35) 45%, rgba(255, 230, 150, 0.15));
-        box-shadow: 0 0 14px rgba(255, 245, 200, 0.35);
+        box-shadow: 0 0 9px rgba(255, 245, 200, 0.28);
+        appearance: none;
         pointer-events: auto;
         cursor: pointer;
+        will-change: transform, opacity;
       }
 
       .champagne-bubble--popping {
-        animation: bubble-pop 180ms ease-out forwards;
-      }
-
-      @keyframes bubble-pop {
-        from {
-          opacity: 1;
-          transform: translateX(var(--bubble-x)) scale(1);
-        }
-        to {
-          opacity: 0;
-          transform: translateX(var(--bubble-x)) scale(1.6);
-        }
+        pointer-events: none;
       }
 
       @media (max-width: 900px) {
+        .bubble-rail {
+          width: clamp(72px, 11vw, 96px);
+        }
         .hero {
           min-height: auto;
           background-attachment: fixed;
@@ -446,11 +442,11 @@
         if (!rails.length) return;
 
         const bubbles = [];
-        const spawnDelayMs = 260;
+        const spawnDelayMs = 520;
         const spawnTimers = new Map(rails.map((rail) => [rail, 0]));
-        const baseRiseSpeed = 42;
+        const baseRiseSpeed = 34;
         const scrollModeHoldMs = 180;
-        const maxBubbles = 120;
+        const maxBubbles = 36;
         let scrollMode = 'idle';
         let scrollModeUntil = 0;
         let lastTimestamp;
@@ -466,7 +462,15 @@
           if (bubble.popping) return;
           bubble.popping = true;
           bubble.el.classList.add('champagne-bubble--popping');
-          bubble.el.addEventListener('animationend', () => removeBubble(bubble), { once: true });
+          const currentTransform = bubble.el.style.transform || `translate3d(${bubble.x}px, ${bubble.y}px, 0)`;
+          const animation = bubble.el.animate(
+            [
+              { transform: currentTransform, opacity: 1 },
+              { transform: `${currentTransform} scale(1.55)`, opacity: 0 },
+            ],
+            { duration: 180, easing: 'ease-out', fill: 'forwards' }
+          );
+          animation.addEventListener('finish', () => removeBubble(bubble), { once: true });
         };
 
         const makeBubble = (rail) => {
@@ -474,15 +478,15 @@
             removeBubble(bubbles[0]);
           }
 
-          const size = 8 + Math.random() * 16;
-          const offsetX = (Math.random() - 0.5) * 22;
+          const size = 8 + Math.random() * 10;
+          const maxDrift = Math.max((rail.clientWidth - size) / 2 - 2, 0);
+          const offsetX = (Math.random() * 2 - 1) * maxDrift;
           const bubbleEl = document.createElement('button');
           bubbleEl.type = 'button';
           bubbleEl.className = 'champagne-bubble';
           bubbleEl.setAttribute('aria-label', 'Pop bubble');
           bubbleEl.style.width = `${size}px`;
           bubbleEl.style.height = `${size}px`;
-          bubbleEl.style.setProperty('--bubble-x', `${offsetX}px`);
 
           const bubble = {
             el: bubbleEl,
@@ -525,7 +529,7 @@
             return;
           }
 
-          const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
+          const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.045);
           lastTimestamp = timestamp;
 
           if (scrollModeUntil && timestamp > scrollModeUntil) {
@@ -555,7 +559,7 @@
             if (bubble.popping) continue;
 
             bubble.y -= baseRiseSpeed * riseMultiplier * dt;
-            bubble.el.style.transform = `translateX(${bubble.x}px) translateY(${bubble.y}px)`;
+            bubble.el.style.transform = `translate3d(${bubble.x}px, ${bubble.y}px, 0)`;
 
             if (bubble.y + bubble.size < -20) {
               removeBubble(bubble);
