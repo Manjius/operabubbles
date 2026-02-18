@@ -66,13 +66,34 @@
 
       .mascot-cta {
         position: fixed;
-        top: 1rem;
-        right: 1rem;
+        left: 1rem;
+        bottom: 1rem;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
+        align-items: flex-start;
         gap: 0.4rem;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .mascot-cta--entering {
+        opacity: 1;
+        visibility: visible;
+        animation: mascot-entry 2.8s ease-in-out forwards;
+      }
+
+      .mascot-cta--active {
+        top: 50%;
+        right: 1rem;
+        bottom: auto;
+        left: auto;
+        transform: translateY(-50%);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        align-items: flex-end;
       }
 
       .mascot-cta__bubble {
@@ -88,6 +109,16 @@
         color: #000;
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
         text-decoration: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      }
+
+      .mascot-cta--active .mascot-cta__bubble {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
       }
 
       .mascot-cta__bubble::after {
@@ -103,12 +134,15 @@
         transform: rotate(45deg);
       }
 
-      .mascot-cta img {
+      .mascot-cta__image {
         display: block;
         width: clamp(72px, 9vw, 110px);
         height: auto;
-        animation: mascot-zoom 2.75s ease-in-out infinite;
         transform-origin: center;
+      }
+
+      .mascot-cta--active .mascot-cta__image {
+        animation: mascot-zoom 2.75s ease-in-out infinite;
       }
 
       @keyframes mascot-zoom {
@@ -119,6 +153,27 @@
         }
         36.36% {
           transform: scale(1.12);
+        }
+      }
+
+      @keyframes mascot-entry {
+        0% {
+          transform: translate(0, 0) scale(3.2);
+        }
+        18% {
+          transform: translate(11vw, -8vh) scale(2.8);
+        }
+        36% {
+          transform: translate(24vw, -2vh) scale(2.35);
+        }
+        54% {
+          transform: translate(46vw, -19vh) scale(1.9);
+        }
+        72% {
+          transform: translate(66vw, -10vh) scale(1.45);
+        }
+        100% {
+          transform: translate(calc(100vw - 11rem), calc(-50vh + 5rem)) scale(1);
         }
       }
 
@@ -249,10 +304,10 @@
       <img src="assets/header_image.jpeg" alt="" />
     </div>
 
-    <div class="mascot-cta" aria-label="Booking reminder">
+    <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
       <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Click me to secure your early bird tickets!!</a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
-        <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
+        <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
     </div>
 
@@ -379,5 +434,48 @@
         </div>
       </div>
     </section>
+
+    <script>
+      (() => {
+        const mascotCta = document.querySelector('[data-mascot-cta]');
+        const headerImage = document.querySelector('.top-header-image');
+
+        if (!mascotCta || !headerImage) {
+          return;
+        }
+
+        let hasStarted = false;
+
+        const activateMascot = () => {
+          if (hasStarted) {
+            return;
+          }
+
+          hasStarted = true;
+          mascotCta.classList.add('mascot-cta--entering');
+
+          mascotCta.addEventListener(
+            'animationend',
+            () => {
+              mascotCta.classList.remove('mascot-cta--entering');
+              mascotCta.classList.add('mascot-cta--active');
+            },
+            { once: true }
+          );
+        };
+
+        const checkScrollPosition = () => {
+          const pastHeaderImage = window.scrollY > headerImage.offsetHeight;
+
+          if (pastHeaderImage) {
+            activateMascot();
+            window.removeEventListener('scroll', checkScrollPosition);
+          }
+        };
+
+        window.addEventListener('scroll', checkScrollPosition, { passive: true });
+        checkScrollPosition();
+      })();
+    </script>
   </body>
 </html>
