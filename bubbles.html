@@ -27,8 +27,8 @@
 
       body {
         margin: 0;
-        font-family: "Josefin Sans";
-        font-weight: 700;
+        font-family: "Josefin Slab";
+        font-weight: 600;
         color: var(--hero-text);
         background-color: var(--hero-bg);
       }
@@ -50,9 +50,9 @@
 
       .page-title h1 {
         margin: 0;
-        font-family: "Josefin Slab";
+        font-family: "Josefin Sans";
         font-size: clamp(2.2rem, 6vw, 4.2rem);
-        font-weight: 600;
+        font-weight: 700;
         color: #000;
         line-height: 1.12;
       }
@@ -96,6 +96,46 @@
         text-decoration: none;
       }
 
+      .title-dock__menu-wrap {
+        position: relative;
+      }
+
+      .title-dock__menu {
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .title-dock__dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.4rem);
+        min-width: 180px;
+        margin: 0;
+        padding: 0.45rem 0;
+        border-radius: 0.5rem;
+        list-style: none;
+        background: rgba(0, 0, 0, 0.9);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .title-dock__dropdown[hidden] {
+        display: none;
+      }
+
+      .title-dock__dropdown-link {
+        display: block;
+        padding: 0.45rem 0.8rem;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.95rem;
+      }
+
+      .title-dock__dropdown-link:hover,
+      .title-dock__dropdown-link:focus-visible {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
       .mascot-cta {
         position: fixed;
         bottom: 1rem;
@@ -108,6 +148,7 @@
       }
 
       .mascot-cta__bubble {
+        display: block;
         position: relative;
         max-width: min(280px, 72vw);
         padding: 0.6rem 0.75rem;
@@ -118,6 +159,7 @@
         line-height: 1.35;
         color: #000;
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
       }
 
       .mascot-cta__bubble::after {
@@ -134,6 +176,7 @@
       }
 
       .mascot-cta img {
+        display: block;
         width: clamp(72px, 9vw, 110px);
         height: auto;
         animation: mascot-zoom 2.75s ease-in-out infinite;
@@ -154,9 +197,9 @@
 
       .intro-section__subheading {
         margin: 1.4rem 0 0.75rem;
-        font-family: "Josefin Slab";
+        font-family: "Josefin Sans";
         font-size: clamp(2rem, 4.8vw, 3.2rem);
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1.1;
         color: var(--hero-gold);
       }
@@ -214,9 +257,9 @@
       .hero__title {
         margin: 0 0 1.5rem;
         text-align: center;
-        font-family: "Josefin Slab";
+        font-family: "Josefin Sans";
         font-size: clamp(2.4rem, 6vw, 4.5rem);
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1.1;
         color: var(--hero-gold);
       }
@@ -279,8 +322,10 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder">
-      <div class="mascot-cta__bubble">Hurry to book your ticket for my first brunch show ever!</div>
-      <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
+      <a class="mascot-cta__bubble" href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer">Hurry to book your ticket for my first brunch show ever!</a>
+      <a href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
+        <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
+      </a>
     </div>
 
     <header class="page-title" aria-labelledby="page-main-title">
@@ -291,7 +336,15 @@
     <div class="title-dock-sentinel" aria-hidden="true"></div>
     <div class="title-dock" id="title-dock" aria-label="Main title actions">
       <span class="title-dock__brand">Opera and Bubbles</span>
-      <a class="title-dock__menu" href="#">Menu</a>
+      <div class="title-dock__menu-wrap">
+        <button class="title-dock__menu" id="menu-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu-dropdown">Menu</button>
+        <ul class="title-dock__dropdown" id="menu-dropdown" hidden>
+          <li><a class="title-dock__dropdown-link" href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
+          <li><a class="title-dock__dropdown-link" href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
+          <li><a class="title-dock__dropdown-link" href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
+          <li><a class="title-dock__dropdown-link" href="https://www.operabubbles.nl" target="_blank" rel="noopener noreferrer">Buy a ticket</a></li>
+        </ul>
+      </div>
     </div>
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
@@ -434,6 +487,8 @@
     <script>
       const titleDock = document.getElementById("title-dock");
       const titleDockSentinel = document.querySelector(".title-dock-sentinel");
+      const menuToggle = document.getElementById("menu-toggle");
+      const menuDropdown = document.getElementById("menu-dropdown");
 
       const titleDockObserver = new IntersectionObserver(
         ([entry]) => {
@@ -443,6 +498,19 @@
       );
 
       titleDockObserver.observe(titleDockSentinel);
+
+      menuToggle.addEventListener("click", () => {
+        const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.setAttribute("aria-expanded", String(!isOpen));
+        menuDropdown.hidden = isOpen;
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".title-dock__menu-wrap")) {
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuDropdown.hidden = true;
+        }
+      });
     </script>
   </body>
 </html>
