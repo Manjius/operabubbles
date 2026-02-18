@@ -221,7 +221,65 @@
         margin-bottom: 0;
       }
 
+
+
+      .bubble-rails {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      .bubble-side {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: clamp(56px, 8vw, 90px);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(3px, 0.5vw, 8px);
+      }
+
+      .bubble-side--left {
+        left: 0;
+      }
+
+      .bubble-side--right {
+        right: 0;
+      }
+
+      .bubble-rail {
+        position: relative;
+        overflow: visible;
+      }
+
+      .champagne-bubble {
+        position: absolute;
+        left: 50%;
+        padding: 0;
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
+        border: 1px solid rgba(255, 255, 255, 0.78);
+        background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.36) 44%, rgba(255, 228, 145, 0.14));
+        box-shadow: 0 0 8px rgba(255, 245, 200, 0.24);
+        appearance: none;
+        pointer-events: auto;
+        cursor: pointer;
+        will-change: transform, opacity;
+      }
+
+      .champagne-bubble--popping {
+        pointer-events: none;
+      }
+
       @media (max-width: 900px) {
+        .bubble-side {
+          width: clamp(64px, 13vw, 102px);
+          gap: clamp(2px, 0.9vw, 6px);
+        }
+        .bubble-rail {
+          width: clamp(72px, 11vw, 96px);
+        }
         .hero {
           min-height: auto;
           background-attachment: fixed;
@@ -247,7 +305,7 @@
   </head>
   <body>
     <div class="top-header-image" aria-hidden="true">
-      <img src="assets/header_image.jpeg" alt="" />
+      <img src="assets/header_image.jpg" alt="" />
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder">
@@ -255,6 +313,21 @@
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
+    </div>
+
+
+
+    <div class="bubble-rails" aria-hidden="true">
+      <div class="bubble-side bubble-side--left" data-side="left">
+        <div class="bubble-rail" data-lane="1"></div>
+        <div class="bubble-rail" data-lane="2"></div>
+        <div class="bubble-rail" data-lane="3"></div>
+      </div>
+      <div class="bubble-side bubble-side--right" data-side="right">
+        <div class="bubble-rail" data-lane="1"></div>
+        <div class="bubble-rail" data-lane="2"></div>
+        <div class="bubble-rail" data-lane="3"></div>
+      </div>
     </div>
 
     <header class="page-title" aria-labelledby="page-main-title">
@@ -380,5 +453,147 @@
         </div>
       </div>
     </section>
+
+
+    <script>
+      (() => {
+        const rails = Array.from(document.querySelectorAll('.bubble-rail'));
+        if (!rails.length) return;
+
+        const bubbles = [];
+        const spawnDelayMs = 950;
+        const spawnJitterMs = 420;
+        const nextSpawnAt = new Map(rails.map((rail) => [rail, Math.random() * (spawnDelayMs + spawnJitterMs)]));
+        const baseRiseSpeed = 102;
+        const scrollModeHoldMs = 180;
+        const maxBubbles = 72;
+        let scrollMode = 'idle';
+        let scrollModeUntil = 0;
+        let lastTimestamp;
+        let lastScrollY = window.scrollY;
+
+        const removeBubble = (bubble) => {
+          bubble.el.remove();
+          const idx = bubbles.indexOf(bubble);
+          if (idx !== -1) bubbles.splice(idx, 1);
+        };
+
+        const popBubble = (bubble, duration = 220) => {
+          if (!bubble || bubble.popping) return;
+          bubble.popping = true;
+          bubble.el.classList.add('champagne-bubble--popping');
+          const currentTransform = bubble.el.style.transform || `translate3d(${bubble.x}px, ${bubble.y}px, 0)`;
+          const animation = bubble.el.animate(
+            [
+              { transform: currentTransform, opacity: 1 },
+              { transform: `${currentTransform} scale(1.5)`, opacity: 0 },
+            ],
+            { duration, easing: 'ease-out', fill: 'forwards' }
+          );
+          animation.addEventListener('finish', () => removeBubble(bubble), { once: true });
+        };
+
+        const makeBubble = (rail) => {
+          if (bubbles.length >= maxBubbles) {
+            popBubble(bubbles[0], 140);
+            return;
+          }
+
+          const size = 2 + Math.random() * 2.5;
+          const maxDrift = Math.max((rail.clientWidth - size) / 2 - 1.5, 0);
+          const offsetX = (Math.random() * 2 - 1) * maxDrift;
+          const bubbleEl = document.createElement('button');
+          bubbleEl.type = 'button';
+          bubbleEl.className = 'champagne-bubble';
+          bubbleEl.setAttribute('aria-label', 'Pop bubble');
+          bubbleEl.style.width = `${size}px`;
+          bubbleEl.style.height = `${size}px`;
+
+          const bubble = {
+            el: bubbleEl,
+            rail,
+            size,
+            x: offsetX,
+            y: rail.clientHeight - size,
+            popping: false,
+          };
+
+          bubbleEl.addEventListener('pointerdown', () => popBubble(bubble));
+          bubbleEl.addEventListener('click', () => popBubble(bubble));
+
+          rail.appendChild(bubbleEl);
+          bubbles.push(bubble);
+        };
+
+        const updateScrollMode = () => {
+          const currentY = window.scrollY;
+          const delta = currentY - lastScrollY;
+          const now = performance.now();
+
+          if (delta > 0) {
+            scrollMode = 'down';
+            scrollModeUntil = now + scrollModeHoldMs;
+          } else if (delta < 0) {
+            scrollMode = 'up';
+            scrollModeUntil = now + scrollModeHoldMs;
+          }
+
+          lastScrollY = currentY;
+        };
+
+        window.addEventListener('scroll', updateScrollMode, { passive: true });
+
+        const frame = (timestamp) => {
+          if (!lastTimestamp) {
+            lastTimestamp = timestamp;
+            requestAnimationFrame(frame);
+            return;
+          }
+
+          const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.04);
+          lastTimestamp = timestamp;
+
+          if (scrollModeUntil && timestamp > scrollModeUntil) {
+            scrollMode = 'idle';
+            scrollModeUntil = 0;
+          }
+
+          let riseMultiplier = 1;
+          if (scrollMode === 'down') {
+            riseMultiplier = 2;
+          } else if (scrollMode === 'up') {
+            riseMultiplier = 0;
+          }
+
+          rails.forEach((rail) => {
+            const next = nextSpawnAt.get(rail) - dt * 1000;
+            if (next <= 0) {
+              makeBubble(rail);
+              const randomizedDelay = spawnDelayMs + Math.random() * spawnJitterMs;
+              nextSpawnAt.set(rail, randomizedDelay);
+            } else {
+              nextSpawnAt.set(rail, next);
+            }
+          });
+
+          for (let i = bubbles.length - 1; i >= 0; i -= 1) {
+            const bubble = bubbles[i];
+            if (bubble.popping) continue;
+
+            bubble.y -= baseRiseSpeed * riseMultiplier * dt;
+            bubble.el.style.transform = `translate3d(${bubble.x}px, ${bubble.y}px, 0)`;
+
+            if (bubble.y + bubble.size <= 2) {
+              popBubble(bubble, 180);
+            }
+          }
+
+          requestAnimationFrame(frame);
+        };
+
+        requestAnimationFrame(frame);
+      })();
+    </script>
+
   </body>
 </html>
