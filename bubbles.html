@@ -37,6 +37,7 @@
 
       .top-header-image {
         width: 100%;
+        overflow: hidden;
       }
 
       .top-header-image img {
@@ -53,7 +54,7 @@
       .page-title h1 {
         margin: 0;
         font-family: "Josefin Sans";
-        font-size: clamp(2.2rem, 6vw, 4.2rem);
+        font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
         color: #000;
         line-height: 1.12;
@@ -61,8 +62,47 @@
 
       .page-title p {
         margin: 0.35rem 0 0;
-        font-size: clamp(1rem, 2.1vw, 1.3rem);
+        font-size: clamp(1.3rem, 2.73vw, 1.69rem);
+        font-family: "Josefin Slab", serif;
+        font-weight: 700;
         color: #000;
+      }
+
+      .event-meta {
+        padding: clamp(1rem, 3vw, 2rem) clamp(1.2rem, 4vw, 4rem);
+      }
+
+      .event-meta__grid {
+        width: min(1300px, 100%);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(160px, 1fr));
+        gap: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      .event-meta__item h3 {
+        margin: 0 0 0.25rem;
+        font-family: "Josefin Sans";
+        font-size: clamp(2.2rem, 6vw, 4.2rem);
+        font-weight: 900;
+      }
+
+      .event-meta__item {
+        text-align: center;
+      }
+
+      .event-meta__item p {
+        margin: 0;
+        font-size: clamp(1.37rem, 2.6vw, 1.56rem);
+        line-height: 1.35;
+        font-family: "Josefin Slab", serif;
+        font-weight: 700;
+      }
+
+      .event-meta__item a {
+        color: #000;
+        font-family: "Josefin Slab", serif;
+        font-weight: 700;
       }
 
 
@@ -385,7 +425,19 @@
         color: var(--hero-bg);
       }
 
+
+      @media (min-width: 901px) {
+        .top-header-image img {
+          margin-top: -40px;
+          margin-bottom: -400px;
+        }
+      }
+
       @media (max-width: 900px) {
+        .event-meta__grid {
+          grid-template-columns: repeat(2, minmax(180px, 1fr));
+        }
+
         .bubble-side {
           width: clamp(64px, 13vw, 102px);
           gap: clamp(2px, 0.9vw, 6px);
@@ -417,6 +469,10 @@
 
 
       @media (max-width: 760px) {
+        .event-meta__grid {
+          grid-template-columns: 1fr;
+        }
+
         body {
           padding-bottom: 7rem;
         }
@@ -471,6 +527,36 @@
       <h1 id="page-main-title">Opera &amp; Bubbles: Audition edition</h1>
       <p>A brunch show where you are the chosen one</p>
     </header>
+
+    <section class="event-meta" aria-label="Event details">
+      <div class="event-meta__grid">
+        <article class="event-meta__item">
+          <h3>Date &amp; Time</h3>
+          <p>Première in 15th of march</p>
+          <p>From 12:00 till 14:00</p>
+        </article>
+
+        <article class="event-meta__item">
+          <h3>Venue</h3>
+          <p>
+            <a href="https://maps.app.goo.gl/FtKEz1qm4nXC1wRy6" target="_blank" rel="noopener noreferrer">Blue Collar Theater in Klokgebouw</a>
+          </p>
+        </article>
+
+        <article class="event-meta__item">
+          <h3>Price</h3>
+          <p>65€ (incl. Unlimited bubbles and brunch)</p>
+        </article>
+
+        <article class="event-meta__item">
+          <h3>How to book</h3>
+          <p>
+            <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Klick here to secure your place!</a>
+          </p>
+          <p>Seats are limited!</p>
+        </article>
+      </div>
+    </section>
 
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
