@@ -11,12 +11,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&family=Josefin+Slab:wght@600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700;800;900&family=Josefin+Slab:wght@600;700&display=swap"
       rel="stylesheet"
     />
+
     <style>
       :root {
-        --hero-bg: #ffffff;
+        --hero-bg: #f7e7ce;
         --hero-gold: #8b7342;
         --hero-text: #1f1f1f;
       }
@@ -245,7 +246,7 @@
 
       .hero__body {
         font-size: calc(clamp(1rem, 2.1vw, 1.12rem)*1.3);
-        line-height: 1.75;
+        line-height: 1.375;
       }
 
       .hero__body p {
@@ -265,6 +266,16 @@
         display: block;
         font-style: italic;
         font-weight: 700;
+      }
+
+      .reasons-list li::marker {
+        font-weight: 700;
+      }
+
+      .reasons-list li strong {
+        display: block;
+        font-family: "Josefin Sans";
+        font-weight: 900;
       }
 
       .hero__body p:last-child {
@@ -442,12 +453,6 @@
               <li>Theatre moments</li>
             </ul>
 
-            <p>Come as you are.</p>
-            <p>Eat well.</p>
-            <p>Drink bubbles.</p>
-            <p>Listen closely.</p>
-
-            <p>Seats are very limited.</p>
           </div>
         </div>
 
@@ -471,28 +476,28 @@
           <h2 id="opera-bubbles-reasons-title" class="hero__title">5 Reasons to Join Opera &amp; Bubbles</h2>
 
           <div class="hero__body">
-            <ol>
+            <ol class="reasons-list">
               <li>
-                <em>It’s an absolutely unique brunch experience</em>
+                <strong>It’s an absolutely unique brunch experience</strong>
                 You enjoy a full brunch while listening to live opera, musical theatre and theatrical drama. Not
                 background music. A real performance. For the price of a simple restaurant visit.
               </li>
               <li>
-                <em>It’s a special late morning plan</em>
+                <strong>It’s a special late morning plan</strong>
                 No late nights. No rushing next morning. Just a beautiful, slow weekend morning filled with music,
                 bubbles and nice atmosphere.
               </li>
               <li>
-                <em>It’s in the heart of Eindhoven</em>
+                <strong>It’s in the heart of Eindhoven</strong>
                 Located in the iconic Klokgebouw, right in the vibrant Strijp-s .Easy to reach, impossible to forget.
               </li>
               <li>
-                <em>It’s perfect for dates, friends or colleagues</em>
+                <strong>It’s perfect for dates, friends or colleagues</strong>
                 Make memories with your partner. Laugh with your best friends and siblings. Surprise your colleagues.
                 It works for everyone.
               </li>
               <li>
-                <em>It’s interactive, memorable and welcoming</em>
+                <strong>It’s interactive, memorable and welcoming</strong>
                 You are gently included, never pressured. The atmosphere is warm, safe and inviting, whether you love
                 opera or have never heard it live before.
               </li>
@@ -503,8 +508,6 @@
         </div>
       </div>
     </section>
-
-<<<<<<< codex/update-header-image-extension-to-jpg
 
     <script>
       (() => {
@@ -646,7 +649,6 @@
       })();
     </script>
 
-=======
     <script>
       (() => {
         const mascotCta = document.querySelector('[data-mascot-cta]');
@@ -689,6 +691,5 @@
         checkScrollPosition();
       })();
     </script>
->>>>>>> main
   </body>
 </html>
