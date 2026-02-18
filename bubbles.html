@@ -101,9 +101,9 @@
         position: relative;
         max-width: min(280px, 72vw);
         padding: 0.6rem 0.75rem;
-        border-radius: 0.8rem;
+        border-radius: 9998rem;
         border: 1px solid rgba(58, 58, 58, 0.2);
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 1);
         font-size: 0.9rem;
         line-height: 1.35;
         color: #000;
@@ -124,11 +124,11 @@
       .mascot-cta__bubble::after {
         content: "";
         position: absolute;
-        right: 1rem;
+        right: 2rem;
         bottom: -7px;
         width: 12px;
         height: 12px;
-        background: rgba(255, 255, 255, 0.95);
+        background: inherit;
         border-right: 1px solid rgba(58, 58, 58, 0.2);
         border-bottom: 1px solid rgba(58, 58, 58, 0.2);
         transform: rotate(45deg);
@@ -260,7 +260,7 @@
       }
 
       .hero__body {
-        font-size: calc(clamp(1rem, 2.1vw, 1.12rem) * 1.3);
+        font-size: calc(clamp(1rem, 2.1vw, 1.12rem)*1.3);
         line-height: 1.75;
       }
 
@@ -313,11 +313,11 @@
   </head>
   <body>
     <div class="top-header-image" aria-hidden="true">
-      <img src="assets/header_image.jpeg" alt="" />
+      <img src="assets/header_image.jpg" alt="" />
     </div>
 
-    <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
-      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Click me to secure your early bird tickets!!</a>
+    <div class="mascot-cta" aria-label="Booking reminder">
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer">Secure your<br>ticket gurl!!</a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
