@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700;800;900&family=Josefin+Slab:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Playfair+Display:wght@700;800;900&display=swap"
       rel="stylesheet"
     />
 
@@ -20,6 +20,8 @@
         --hero-bg: #f7e7ce;
         --hero-gold: #8b7342;
         --hero-text: #1f1f1f;
+        --font-heading: "Playfair Display", serif;
+        --font-body: "Lora", serif;
       }
 
       * {
@@ -29,7 +31,7 @@
       body {
         margin: 0;
         padding-bottom: 5.3rem;
-        font-family: "Josefin Slab";
+        font-family: var(--font-body);
         font-weight: 600;
         color: var(--hero-text);
         background-color: var(--hero-bg);
@@ -53,17 +55,17 @@
 
       .page-title h1 {
         margin: 0;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
-        color: #000;
+        color: var(--hero-gold);
         line-height: 1.12;
       }
 
       .page-title p {
         margin: 0.35rem 0 0;
         font-size: clamp(1.3rem, 2.73vw, 1.69rem);
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
         color: #000;
       }
@@ -82,26 +84,35 @@
 
       .event-meta__item h3 {
         margin: 0 0 0.25rem;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.2rem, 6vw, 4.2rem);
         font-weight: 900;
       }
 
       .event-meta__item {
         text-align: center;
+        opacity: 0;
+        transform: translateX(-70px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+        will-change: opacity, transform;
       }
+
+      .event-meta__item:nth-child(even) {
+        transform: translateX(70px);
+      }
+
 
       .event-meta__item p {
         margin: 0;
         font-size: clamp(1.37rem, 2.6vw, 1.56rem);
         line-height: 1.35;
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
       }
 
       .event-meta__item a {
         color: #000;
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
       }
 
@@ -218,7 +229,7 @@
 
       .intro-section__subheading {
         margin: 1.4rem 0 0.75rem;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2rem, 4.8vw, 3.2rem);
         font-weight: 700;
         line-height: 1.1;
@@ -229,6 +240,11 @@
         margin: 0.2rem 0 1rem;
         padding-left: 1.25rem;
       }
+
+      .intro-section .hero__body {
+        text-align: center;
+      }
+
 
       .hero {
         position: relative;
@@ -278,7 +294,7 @@
       .hero__title {
         margin: 0 0 1.5rem;
         text-align: center;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
         line-height: 1.1;
@@ -286,6 +302,7 @@
       }
 
       .hero__body {
+        font-family: var(--font-body);
         font-size: calc(clamp(1rem, 2.1vw, 1.12rem)*1.3);
         line-height: 1.375;
       }
@@ -315,7 +332,7 @@
 
       .reasons-list li strong {
         display: block;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-weight: 900;
       }
 
@@ -492,6 +509,39 @@
           text-align:right;
           min-width:0;            /* allows wrapping instead of pushing layout */
         }
+
+        .event-meta__item:nth-child(odd) {
+          transform: translateX(-70px);
+        }
+
+        .event-meta__item:nth-child(even) {
+          transform: translateX(70px);
+        }
+      }
+
+      @media (min-width: 761px) {
+        .event-meta__item,
+        .event-meta__item:nth-child(even) {
+          transform: translateX(-70px);
+        }
+      }
+
+
+      .event-meta__item.is-visible,
+      .event-meta__item:nth-child(even).is-visible,
+      .event-meta__item:nth-child(odd).is-visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .event-meta__item,
+        .event-meta__item:nth-child(even),
+        .event-meta__item:nth-child(odd) {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
       }
 
     </style>
@@ -502,7 +552,7 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
-      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><Strong>Secure your<br>ticket gurl!!</Strong></Strong></a>
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><strong>Secure your<br>ticket gurl!!</Strong></strong></a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
@@ -532,7 +582,7 @@
       <div class="event-meta__grid">
         <article class="event-meta__item">
           <h3>Date &amp; Time</h3>
-          <p>Première in 15th of march</p>
+          <p>Première on 15th of march</p>
           <p>From 12:00 till 14:00</p>
         </article>
 
@@ -570,16 +620,12 @@
           <h2 id="intro-section-title" class="hero__title">What is Opera &amp; Bubbles brunch show</h2>
 
           <div class="hero__body">
-            <p>The secret opera brunch of Eindhoven.</p>
+            <p>The secret opera brunch in Eindhoven.</p>
             <p>
               Opera &amp; Bubbles blends opera, musical and storytelling into one sparkling, immersive brunch
               experience.
             </p>
-            <p>Sip something bubbly.</p>
-            <p>Enjoy your seat.</p>
-            <p>And suddenly… you’re part of the audition.</p>
-            <p>Seduction. Laughter. A little danger.</p>
-            <p>Opera closer than you ever imagined.</p>
+            <p>Seduction. Laughter. Opera closer than you ever imagined.</p>
             <p>Only at Klokgebouw, Blue Collar Theater.</p>
 
           </div>
@@ -591,56 +637,13 @@
     <section class="hero" aria-labelledby="experience-music-title">
       <div class="hero__grid">
         <div class="hero__content">
-          <div class="hero__rule" aria-hidden="true"></div>
-          <h2 id="experience-music-title" class="hero__title">The Experience &amp; Music</h2>
-
-          <div class="hero__body">
-            <h3 class="intro-section__subheading">The Experience</h3>
-            <p>Over approximately two to two and a half hours, you will experience:</p>
-            <ul>
-              <li>A relaxed brunch with soup, sandwiches, snacks, dessert and endless bubbles</li>
-              <li>Live opera and musical performed by Anna Karnovska up close</li>
-              <li>Theater with professional performers</li>
-              <li>Audience participation that is playful and surely optional</li>
-              <li>Moments of humor, honesty, and recognition</li>
-            </ul>
-
-            <h3 class="intro-section__subheading">About the Music</h3>
-            <p>The show features a mix of:</p>
-            <ul>
-              <li>Classical opera arias</li>
-              <li>Musical theatre</li>
-              <li>Jazz</li>
-              <li>Piano solos</li>
-              <li>Theatre moments</li>
-            </ul>
-
-          </div>
-        </div>
-
-        <div class="hero__media">
-          <img src="assets/blok2_image.jpeg" alt="Opera & Bubbles performers and guests during brunch theatre" />
-        </div>
-      </div>
-    </section>
-
-    <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
-      <div class="hero__grid">
-        <div class="hero__media">
-          <img
-            src="assets/brunch-photo.jpg"
-            alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
-          />
-        </div>
-
-        <div class="hero__content">
-          <div class="hero__rule" aria-hidden="true"></div>
+                  <div class="hero__rule" aria-hidden="true"></div>
           <h2 id="opera-bubbles-reasons-title" class="hero__title">5 Reasons to Join Opera &amp; Bubbles</h2>
 
           <div class="hero__body">
             <ol class="reasons-list">
               <li>
-                <strong>It’s an absolutely unique brunch experience</strong>
+                <strong>Treat yourself to an absolutely unique brunch experience</strong>
                 You enjoy a full brunch while listening to live opera, musical theatre and theatrical drama. Not
                 background music. A real performance. For the price of a simple restaurant visit.
               </li>
@@ -664,8 +667,39 @@
                 opera or have never heard it live before.
               </li>
             </ol>
-            <p>Opera &amp; Bubbles is not just brunch.</p>
-            <p>It’s culture, connection and experience — all in one morning.</p>
+          </div>
+        </div>
+        <div class="hero__media">
+          <img src="assets/blok2_image.jpeg" alt="Opera & Bubbles performers and guests during brunch theatre" />
+        </div>
+      </div>
+    </section>
+
+    <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
+      <div class="hero__grid">
+        <div class="hero__media">
+          <img
+            src="assets/brunch-photo.jpg"
+            alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
+          />
+        </div>
+
+        <div class="hero__content">
+          <div class="hero__rule" aria-hidden="true"></div>
+          <h2 id="experience-music-title" class="hero__title">The Experience</h2>
+
+          <div class="hero__body">
+            
+            <p>Over approximately two to two and a half hours, you will experience:</p>
+            <ul>
+              <li>A relaxed brunch with soup, sandwiches, snacks, dessert and endless bubbles</li>
+              <li>Live opera and musical performed by Anna Karnovska and accompanied by Vera Fonte</li>
+              <li>Theater with professional performers</li>
+              <li>Audience participation that is playful and surely optional</li>
+              <li>Moments of humor, honesty, and recognition</li>
+            </ul>
+
+
           </div>
         </div>
       </div>
@@ -707,6 +741,90 @@
         <a href="mailto:anna.karnovska@gmail.com">anna.karnovska@gmail.com</a>.
       </p>
     </footer>
+
+    <script>
+      (() => {
+        const items = Array.from(document.querySelectorAll('.event-meta__item'));
+        if (!items.length) return;
+
+        const revealOrder = new Map(items.map((item, index) => [item, index]));
+        const queuedItems = [];
+        const queuedSet = new Set();
+        const initialRevealDelayMs = 500;
+        const mobileRevealGapMs = 250;
+        let nextRevealAt = 0;
+        let queueActive = false;
+
+        const flushQueue = () => {
+          if (queueActive || !queuedItems.length) return;
+          queueActive = true;
+
+          const runNext = () => {
+            const nextItem = queuedItems.shift();
+            if (!nextItem) {
+              queueActive = false;
+              return;
+            }
+
+            queuedSet.delete(nextItem);
+
+            const now = performance.now();
+            if (now >= nextRevealAt) {
+              nextRevealAt = now + initialRevealDelayMs;
+            }
+
+            const delay = Math.max(nextRevealAt - now, 0);
+            window.setTimeout(() => {
+              nextItem.classList.add('is-visible');
+              nextRevealAt += mobileRevealGapMs;
+              runNext();
+            }, delay);
+          };
+
+          runNext();
+        };
+
+        const observer = new IntersectionObserver(
+          (entries, currentObserver) => {
+            const newlyVisible = entries
+              .filter((entry) => entry.isIntersecting)
+              .map((entry) => entry.target)
+              .sort((a, b) => revealOrder.get(a) - revealOrder.get(b));
+
+            const isDesktop = window.matchMedia('(min-width: 761px)').matches;
+
+            if (isDesktop) {
+              newlyVisible.forEach((target) => {
+                currentObserver.unobserve(target);
+              });
+
+              if (newlyVisible.length) {
+                window.setTimeout(() => {
+                  newlyVisible.forEach((target) => target.classList.add('is-visible'));
+                }, initialRevealDelayMs);
+              }
+
+              return;
+            }
+
+            newlyVisible.forEach((target) => {
+              if (queuedSet.has(target)) return;
+              queuedSet.add(target);
+              queuedItems.push(target);
+              currentObserver.unobserve(target);
+            });
+
+            flushQueue();
+          },
+          {
+            threshold: 0.35,
+            rootMargin: '0px 0px -10% 0px',
+          }
+        );
+
+        items.forEach((item) => observer.observe(item));
+      })();
+    </script>
 
     <script>
       (() => {
