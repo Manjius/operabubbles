@@ -762,7 +762,7 @@
         const queuedItems = [];
         const queuedSet = new Set();
         const initialRevealDelayMs = 500;
-        const revealGapMs = 2000;
+        const mobileRevealGapMs = 250;
         let nextRevealAt = 0;
         let queueActive = false;
 
@@ -787,7 +787,7 @@
             const delay = Math.max(nextRevealAt - now, 0);
             window.setTimeout(() => {
               nextItem.classList.add('is-visible');
-              nextRevealAt += revealGapMs;
+              nextRevealAt += mobileRevealGapMs;
               runNext();
             }, delay);
           };
@@ -801,6 +801,22 @@
               .filter((entry) => entry.isIntersecting)
               .map((entry) => entry.target)
               .sort((a, b) => revealOrder.get(a) - revealOrder.get(b));
+
+            const isDesktop = window.matchMedia('(min-width: 761px)').matches;
+
+            if (isDesktop) {
+              newlyVisible.forEach((target) => {
+                currentObserver.unobserve(target);
+              });
+
+              if (newlyVisible.length) {
+                window.setTimeout(() => {
+                  newlyVisible.forEach((target) => target.classList.add('is-visible'));
+                }, initialRevealDelayMs);
+              }
+
+              return;
+            }
 
             newlyVisible.forEach((target) => {
               if (queuedSet.has(target)) return;
