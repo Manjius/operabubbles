@@ -101,10 +101,6 @@
         transform: translateX(70px);
       }
 
-      .event-meta__item.is-visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
 
       .event-meta__item p {
         margin: 0;
@@ -525,6 +521,14 @@
         }
       }
 
+
+      .event-meta__item.is-visible,
+      .event-meta__item:nth-child(even).is-visible,
+      .event-meta__item:nth-child(odd).is-visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .event-meta__item,
         .event-meta__item:nth-child(even),
@@ -758,8 +762,11 @@
           (entries, currentObserver) => {
             entries.forEach((entry) => {
               if (!entry.isIntersecting) return;
-              entry.target.classList.add('is-visible');
-              currentObserver.unobserve(entry.target);
+              const target = entry.target;
+              window.setTimeout(() => {
+                target.classList.add('is-visible');
+              }, 500);
+              currentObserver.unobserve(target);
             });
           },
           {
