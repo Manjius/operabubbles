@@ -58,7 +58,7 @@
         font-family: var(--font-heading);
         font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
-        color: #000;
+        color: var(--hero-gold);
         line-height: 1.12;
       }
 
@@ -240,6 +240,11 @@
         margin: 0.2rem 0 1rem;
         padding-left: 1.25rem;
       }
+
+      .intro-section .hero__body {
+        text-align: center;
+      }
+
 
       .hero {
         position: relative;
@@ -547,7 +552,7 @@
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
-      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><Strong>Secure your<br>ticket gurl!!</Strong></Strong></a>
+      <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><strong>Secure your<br>ticket gurl!!</Strong></strong></a>
       <a href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer" aria-label="Book a ticket">
         <img class="mascot-cta__image" src="assets/annaface.png" alt="Animated character reminding guests to book" />
       </a>
@@ -577,7 +582,7 @@
       <div class="event-meta__grid">
         <article class="event-meta__item">
           <h3>Date &amp; Time</h3>
-          <p>Première in 15th of march</p>
+          <p>Première on 15th of march</p>
           <p>From 12:00 till 14:00</p>
         </article>
 
@@ -615,16 +620,12 @@
           <h2 id="intro-section-title" class="hero__title">What is Opera &amp; Bubbles brunch show</h2>
 
           <div class="hero__body">
-            <p>The secret opera brunch of Eindhoven.</p>
+            <p>The secret opera brunch in Eindhoven.</p>
             <p>
               Opera &amp; Bubbles blends opera, musical and storytelling into one sparkling, immersive brunch
               experience.
             </p>
-            <p>Sip something bubbly.</p>
-            <p>Enjoy your seat.</p>
-            <p>And suddenly… you’re part of the audition.</p>
-            <p>Seduction. Laughter. A little danger.</p>
-            <p>Opera closer than you ever imagined.</p>
+            <p>Seduction. Laughter. Opera closer than you ever imagined.</p>
             <p>Only at Klokgebouw, Blue Collar Theater.</p>
 
           </div>
@@ -636,56 +637,13 @@
     <section class="hero" aria-labelledby="experience-music-title">
       <div class="hero__grid">
         <div class="hero__content">
-          <div class="hero__rule" aria-hidden="true"></div>
-          <h2 id="experience-music-title" class="hero__title">The Experience &amp; Music</h2>
-
-          <div class="hero__body">
-            <h3 class="intro-section__subheading">The Experience</h3>
-            <p>Over approximately two to two and a half hours, you will experience:</p>
-            <ul>
-              <li>A relaxed brunch with soup, sandwiches, snacks, dessert and endless bubbles</li>
-              <li>Live opera and musical performed by Anna Karnovska up close</li>
-              <li>Theater with professional performers</li>
-              <li>Audience participation that is playful and surely optional</li>
-              <li>Moments of humor, honesty, and recognition</li>
-            </ul>
-
-            <h3 class="intro-section__subheading">About the Music</h3>
-            <p>The show features a mix of:</p>
-            <ul>
-              <li>Classical opera arias</li>
-              <li>Musical theatre</li>
-              <li>Jazz</li>
-              <li>Piano solos</li>
-              <li>Theatre moments</li>
-            </ul>
-
-          </div>
-        </div>
-
-        <div class="hero__media">
-          <img src="assets/blok2_image.jpeg" alt="Opera & Bubbles performers and guests during brunch theatre" />
-        </div>
-      </div>
-    </section>
-
-    <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
-      <div class="hero__grid">
-        <div class="hero__media">
-          <img
-            src="assets/brunch-photo.jpg"
-            alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
-          />
-        </div>
-
-        <div class="hero__content">
-          <div class="hero__rule" aria-hidden="true"></div>
+                  <div class="hero__rule" aria-hidden="true"></div>
           <h2 id="opera-bubbles-reasons-title" class="hero__title">5 Reasons to Join Opera &amp; Bubbles</h2>
 
           <div class="hero__body">
             <ol class="reasons-list">
               <li>
-                <strong>It’s an absolutely unique brunch experience</strong>
+                <strong>Treat yourself to an absolutely unique brunch experience</strong>
                 You enjoy a full brunch while listening to live opera, musical theatre and theatrical drama. Not
                 background music. A real performance. For the price of a simple restaurant visit.
               </li>
@@ -709,8 +667,39 @@
                 opera or have never heard it live before.
               </li>
             </ol>
-            <p>Opera &amp; Bubbles is not just brunch.</p>
-            <p>It’s culture, connection and experience — all in one morning.</p>
+          </div>
+        </div>
+        <div class="hero__media">
+          <img src="assets/blok2_image.jpeg" alt="Opera & Bubbles performers and guests during brunch theatre" />
+        </div>
+      </div>
+    </section>
+
+    <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
+      <div class="hero__grid">
+        <div class="hero__media">
+          <img
+            src="assets/brunch-photo.jpg"
+            alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
+          />
+        </div>
+
+        <div class="hero__content">
+          <div class="hero__rule" aria-hidden="true"></div>
+          <h2 id="experience-music-title" class="hero__title">The Experience</h2>
+
+          <div class="hero__body">
+            
+            <p>Over approximately two to two and a half hours, you will experience:</p>
+            <ul>
+              <li>A relaxed brunch with soup, sandwiches, snacks, dessert and endless bubbles</li>
+              <li>Live opera and musical performed by Anna Karnovska and accompanied by Vera Fonte</li>
+              <li>Theater with professional performers</li>
+              <li>Audience participation that is playful and surely optional</li>
+              <li>Moments of humor, honesty, and recognition</li>
+            </ul>
+
+
           </div>
         </div>
       </div>
@@ -829,7 +818,7 @@
           },
           {
             threshold: 0.35,
-            rootMargin: '0px 0px -20% 0px',
+            rootMargin: '0px 0px -10% 0px',
           }
         );
 
