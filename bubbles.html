@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700;800;900&family=Josefin+Slab:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Playfair+Display:wght@700;800;900&display=swap"
       rel="stylesheet"
     />
 
@@ -20,6 +20,8 @@
         --hero-bg: #f7e7ce;
         --hero-gold: #8b7342;
         --hero-text: #1f1f1f;
+        --font-heading: "Playfair Display", serif;
+        --font-body: "Lora", serif;
       }
 
       * {
@@ -29,7 +31,7 @@
       body {
         margin: 0;
         padding-bottom: 5.3rem;
-        font-family: "Josefin Slab";
+        font-family: var(--font-body);
         font-weight: 600;
         color: var(--hero-text);
         background-color: var(--hero-bg);
@@ -53,7 +55,7 @@
 
       .page-title h1 {
         margin: 0;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
         color: #000;
@@ -63,7 +65,7 @@
       .page-title p {
         margin: 0.35rem 0 0;
         font-size: clamp(1.3rem, 2.73vw, 1.69rem);
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
         color: #000;
       }
@@ -82,7 +84,7 @@
 
       .event-meta__item h3 {
         margin: 0 0 0.25rem;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.2rem, 6vw, 4.2rem);
         font-weight: 900;
       }
@@ -95,13 +97,13 @@
         margin: 0;
         font-size: clamp(1.37rem, 2.6vw, 1.56rem);
         line-height: 1.35;
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
       }
 
       .event-meta__item a {
         color: #000;
-        font-family: "Josefin Slab", serif;
+        font-family: var(--font-body);
         font-weight: 700;
       }
 
@@ -218,7 +220,7 @@
 
       .intro-section__subheading {
         margin: 1.4rem 0 0.75rem;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2rem, 4.8vw, 3.2rem);
         font-weight: 700;
         line-height: 1.1;
@@ -278,7 +280,7 @@
       .hero__title {
         margin: 0 0 1.5rem;
         text-align: center;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-size: clamp(2.4rem, 6vw, 4.5rem);
         font-weight: 700;
         line-height: 1.1;
@@ -286,6 +288,7 @@
       }
 
       .hero__body {
+        font-family: var(--font-body);
         font-size: calc(clamp(1rem, 2.1vw, 1.12rem)*1.3);
         line-height: 1.375;
       }
@@ -315,7 +318,7 @@
 
       .reasons-list li strong {
         display: block;
-        font-family: "Josefin Sans";
+        font-family: var(--font-heading);
         font-weight: 900;
       }
 
