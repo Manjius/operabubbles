@@ -131,6 +131,8 @@
         pointer-events: none;
         will-change: transform;
         cursor: grab;
+        -webkit-user-select: none;
+        user-select: none;
       }
 
       .mascot-cta--entering {
@@ -154,6 +156,7 @@
         visibility: visible;
         pointer-events: auto;
         align-items: flex-end;
+        touch-action: none;
       }
 
       .mascot-cta.is-dragging {
@@ -1016,7 +1019,7 @@
           if (!dragState) return;
 
           mascotCta.classList.remove('is-dragging');
-          if (dragState.pointerId !== null) {
+          if (dragState.pointerId !== null && mascotCta.releasePointerCapture) {
             mascotCta.releasePointerCapture(dragState.pointerId);
           }
 
@@ -1035,6 +1038,10 @@
             return;
           }
 
+          if (event.isPrimary === false || (event.button !== undefined && event.button !== 0)) {
+            return;
+          }
+
           event.preventDefault();
 
           const ctaRect = mascotCta.getBoundingClientRect();
@@ -1048,7 +1055,9 @@
           };
 
           mascotCta.classList.add('is-dragging');
-          mascotCta.setPointerCapture(event.pointerId);
+          if (mascotCta.setPointerCapture) {
+            mascotCta.setPointerCapture(event.pointerId);
+          }
 
           window.addEventListener('pointermove', handlePointerMove);
           window.addEventListener('pointerup', handlePointerUp);
@@ -1058,6 +1067,7 @@
         };
 
         mascotCta.addEventListener('pointerdown', startDrag);
+        mascotCta.addEventListener('lostpointercapture', handlePointerUp);
         mascotCta.addEventListener('click', (event) => {
           if (!suppressNextClick) {
             return;
