@@ -97,6 +97,17 @@
         cursor: pointer;
       }
 
+      .intro-trailer__progress {
+        position: absolute;
+        left: 0.9rem;
+        right: 4.1rem;
+        bottom: 1.35rem;
+        z-index: 3;
+        margin: 0;
+        accent-color: #ffffff;
+        cursor: pointer;
+      }
+
       .page-title {
         padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.2rem, 4vw, 4rem) 0;
         text-align: center;
@@ -696,6 +707,7 @@
           >
             <source src="assets/obp.mp4" type="video/mp4" />
           </video>
+          <input class="intro-trailer__progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Trailer progress" data-trailer-progress />
           <button class="intro-trailer__audio-toggle" type="button" aria-label="Unmute trailer" aria-pressed="false" data-trailer-audio-toggle>🔇</button>
         </div>
 
@@ -830,15 +842,33 @@
       (() => {
         const trailer = document.querySelector('[data-intro-trailer]');
         const audioToggle = document.querySelector('[data-trailer-audio-toggle]');
+        const progressBar = document.querySelector('[data-trailer-progress]');
         const launchButton = document.querySelector('[data-trailer-launch]');
         const trailerContainer = document.querySelector('[data-trailer-container]');
-        if (!trailer || !audioToggle || !launchButton || !trailerContainer) return;
+        if (!trailer || !audioToggle || !progressBar || !launchButton || !trailerContainer) return;
 
         const syncAudioButton = () => {
           const muted = trailer.muted;
           audioToggle.textContent = muted ? '🔇' : '🔊';
           audioToggle.setAttribute('aria-pressed', muted ? 'false' : 'true');
           audioToggle.setAttribute('aria-label', muted ? 'Unmute trailer' : 'Mute trailer');
+        };
+
+        const syncProgressBar = () => {
+          if (!Number.isFinite(trailer.duration) || trailer.duration <= 0) {
+            progressBar.value = '0';
+            return;
+          }
+
+          const progress = (trailer.currentTime / trailer.duration) * 100;
+          progressBar.value = String(progress);
+        };
+
+        const seekToPercent = (percent) => {
+          if (!Number.isFinite(trailer.duration) || trailer.duration <= 0) return;
+          const clamped = Math.min(100, Math.max(0, percent));
+          trailer.currentTime = (clamped / 100) * trailer.duration;
+          syncProgressBar();
         };
 
         const playTrailer = () => {
@@ -858,6 +888,7 @@
           const frameTime = Math.min(3, Math.max(trailer.duration - 0.1, 0));
           trailer.currentTime = frameTime;
           trailer.pause();
+          syncProgressBar();
         }, { once: true });
 
         launchButton.addEventListener('click', () => {
@@ -879,6 +910,16 @@
           trailer.pause();
         });
 
+        trailer.addEventListener('timeupdate', syncProgressBar);
+
+        progressBar.addEventListener('input', () => {
+          seekToPercent(Number(progressBar.value));
+        });
+
+        progressBar.addEventListener('change', () => {
+          seekToPercent(Number(progressBar.value));
+        });
+
         const trailerObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -891,6 +932,7 @@
 
         trailerObserver.observe(trailerContainer);
         syncAudioButton();
+        syncProgressBar();
       })();
     </script>
 
