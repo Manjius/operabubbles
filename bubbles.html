@@ -861,18 +861,22 @@
           replayButton.classList.add('is-visible');
         };
 
-        const showTrailer = () => {
-          hidden = false;
-          trailer.classList.remove('is-hidden');
-          audioToggle.classList.remove('is-hidden');
-          replayButton.classList.remove('is-visible');
-          trailer.currentTime = 0;
+        const tryPlayTrailer = () => {
           const playPromise = trailer.play();
           if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {
               hideTrailer();
             });
           }
+        };
+
+        const showTrailer = () => {
+          hidden = false;
+          trailer.classList.remove('is-hidden');
+          audioToggle.classList.remove('is-hidden');
+          replayButton.classList.remove('is-visible');
+          trailer.currentTime = 0;
+          tryPlayTrailer();
         };
 
         audioToggle.addEventListener('click', () => {
@@ -885,6 +889,7 @@
         trailer.addEventListener('ended', hideTrailer);
         trailer.addEventListener('error', hideTrailer, { once: true });
         syncAudioButton();
+        tryPlayTrailer();
       })();
     </script>
 
