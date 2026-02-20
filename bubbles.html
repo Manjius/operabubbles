@@ -38,6 +38,7 @@
       }
 
       .top-header-image {
+        position: relative;
         width: 100%;
         overflow: hidden;
       }
@@ -46,6 +47,21 @@
         display: block;
         width: 100%;
         height: auto;
+      }
+
+      .header-trailer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 2;
+        opacity: 1;
+        transition: opacity 0.6s ease;
+      }
+
+      .header-trailer.is-hidden {
+        opacity: 0;
       }
 
       .page-title {
@@ -89,7 +105,8 @@
         font-weight: 900;
       }
 
-      .event-meta__item {
+      .event-meta__item,
+      .reveal-item {
         text-align: center;
         opacity: 0;
         transform: translateX(-70px);
@@ -97,8 +114,13 @@
         will-change: opacity, transform;
       }
 
-      .event-meta__item:nth-child(even) {
+      .event-meta__item:nth-child(even),
+      .reveal-item[data-mobile-direction='right'] {
         transform: translateX(70px);
+      }
+
+      .reveal-item[data-mobile-direction='left'] {
+        transform: translateX(-70px);
       }
 
 
@@ -518,26 +540,34 @@
           min-width:0;            /* allows wrapping instead of pushing layout */
         }
 
-        .event-meta__item:nth-child(odd) {
+      .event-meta__item:nth-child(odd),
+      .reveal-item[data-mobile-direction='left'] {
           transform: translateX(-70px);
         }
 
-        .event-meta__item:nth-child(even) {
+        .event-meta__item:nth-child(even),
+        .reveal-item[data-mobile-direction='right'] {
           transform: translateX(70px);
         }
       }
 
       @media (min-width: 761px) {
         .event-meta__item,
-        .event-meta__item:nth-child(even) {
+        .event-meta__item:nth-child(even),
+        .reveal-item[data-desktop-direction='left'] {
           transform: translateX(-70px);
+        }
+
+        .reveal-item[data-desktop-direction='right'] {
+          transform: translateX(70px);
         }
       }
 
 
       .event-meta__item.is-visible,
       .event-meta__item:nth-child(even).is-visible,
-      .event-meta__item:nth-child(odd).is-visible {
+      .event-meta__item:nth-child(odd).is-visible,
+      .reveal-item.is-visible {
         opacity: 1;
         transform: translateX(0);
       }
@@ -545,7 +575,8 @@
       @media (prefers-reduced-motion: reduce) {
         .event-meta__item,
         .event-meta__item:nth-child(even),
-        .event-meta__item:nth-child(odd) {
+        .event-meta__item:nth-child(odd),
+        .reveal-item {
           opacity: 1;
           transform: none;
           transition: none;
@@ -557,6 +588,9 @@
   <body>
     <div class="top-header-image" aria-hidden="true">
       <img src="assets/header_image.jpg" alt="" />
+      <video class="header-trailer" autoplay muted playsinline preload="auto">
+        <source src="assets/obp.mp4" type="video/mp4" />
+      </video>
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
@@ -619,11 +653,11 @@
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
-        <div class="hero__media intro-section__media">
+        <div class="hero__media intro-section__media reveal-item" data-mobile-direction="left" data-desktop-direction="left">
           <img src="assets/blok1_image.jpg" alt="Opera & Bubbles brunch guests enjoying an immersive performance" />
         </div>
 
-        <div class="hero__content">
+        <div class="hero__content reveal-item" data-mobile-direction="right" data-desktop-direction="right">
           <div class="hero__rule" aria-hidden="true"></div>
           <h2 id="intro-section-title" class="hero__title">What is Opera &amp; Bubbles brunch show</h2>
 
@@ -644,7 +678,7 @@
 
     <section class="hero" aria-labelledby="experience-music-title">
       <div class="hero__grid">
-        <div class="hero__content">
+        <div class="hero__content reveal-item" data-mobile-direction="left" data-desktop-direction="left">
                   <div class="hero__rule" aria-hidden="true"></div>
           <h2 id="opera-bubbles-reasons-title" class="hero__title">5 Reasons to Join Opera &amp; Bubbles</h2>
 
@@ -677,7 +711,7 @@
             </ol>
           </div>
         </div>
-        <div class="hero__media">
+        <div class="hero__media reveal-item" data-mobile-direction="right" data-desktop-direction="right">
           <img src="assets/blok2_image.jpeg" alt="Opera & Bubbles performers and guests during brunch theatre" />
         </div>
       </div>
@@ -685,14 +719,14 @@
 
     <section class="hero" aria-labelledby="opera-bubbles-reasons-title">
       <div class="hero__grid">
-        <div class="hero__media">
+        <div class="hero__media reveal-item" data-mobile-direction="left" data-desktop-direction="left">
           <img
             src="assets/brunch-photo.jpg"
             alt="Guests raising brunch glasses at a lively Opera & Bubbles brunch"
           />
         </div>
 
-        <div class="hero__content">
+        <div class="hero__content reveal-item" data-mobile-direction="right" data-desktop-direction="right">
           <div class="hero__rule" aria-hidden="true"></div>
           <h2 id="experience-music-title" class="hero__title">The Experience</h2>
 
@@ -752,7 +786,27 @@
 
     <script>
       (() => {
-        const items = Array.from(document.querySelectorAll('.event-meta__item'));
+        const trailer = document.querySelector('.header-trailer');
+        if (!trailer) return;
+
+        let hidden = false;
+
+        const hideTrailer = () => {
+          if (hidden) return;
+          hidden = true;
+          trailer.classList.add('is-hidden');
+          window.setTimeout(() => trailer.remove(), 650);
+        };
+
+        trailer.addEventListener('ended', hideTrailer, { once: true });
+        trailer.addEventListener('error', hideTrailer, { once: true });
+        window.setTimeout(hideTrailer, 12000);
+      })();
+    </script>
+
+    <script>
+      (() => {
+        const items = Array.from(document.querySelectorAll('.event-meta__item, .reveal-item'));
         if (!items.length) return;
 
         const revealOrder = new Map(items.map((item, index) => [item, index]));
