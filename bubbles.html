@@ -50,10 +50,10 @@
       }
 
       .trailer-launch {
-        position: fixed;
-        top: 0.9rem;
-        right: 0.9rem;
-        z-index: 20;
+        position: absolute;
+        left: 0.9rem;
+        bottom: 0.9rem;
+        z-index: 4;
         border: 1px solid rgba(255, 255, 255, 0.65);
         border-radius: 999px;
         padding: 0.52rem 0.95rem;
@@ -622,9 +622,8 @@
   <body>
     <div class="top-header-image">
       <img src="assets/header_image.jpg" alt="" />
+      <button class="trailer-launch" type="button" data-trailer-launch>▶ Play trailer</button>
     </div>
-
-    <button class="trailer-launch" type="button" data-trailer-launch>▶ Play trailer</button>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
       <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><strong>Secure your<br>ticket gurl!!</Strong></strong></a>
