@@ -130,6 +130,9 @@
         visibility: hidden;
         pointer-events: none;
         will-change: transform;
+        cursor: grab;
+        -webkit-user-select: none;
+        user-select: none;
       }
 
       .mascot-cta--entering {
@@ -153,6 +156,11 @@
         visibility: visible;
         pointer-events: auto;
         align-items: flex-end;
+        touch-action: none;
+      }
+
+      .mascot-cta.is-dragging {
+        cursor: grabbing;
       }
 
       .mascot-cta__bubble {
@@ -582,7 +590,7 @@
       <div class="event-meta__grid">
         <article class="event-meta__item">
           <h3>Date &amp; Time</h3>
-          <p>Première on 15th of march</p>
+          <p>Première on 15th of March</p>
           <p>From 12:00 till 14:00</p>
         </article>
 
@@ -976,6 +984,98 @@
         }
 
         let hasStarted = false;
+        let dragState = null;
+        let suppressNextClick = false;
+
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+        const setDraggedPosition = (clientX, clientY) => {
+          const ctaRect = mascotCta.getBoundingClientRect();
+          const maxLeft = Math.max(window.innerWidth - ctaRect.width, 0);
+          const maxTop = Math.max(window.innerHeight - ctaRect.height, 0);
+
+          const nextLeft = clamp(clientX - dragState.offsetX, 0, maxLeft);
+          const nextTop = clamp(clientY - dragState.offsetY, 0, maxTop);
+
+          mascotCta.style.left = `${nextLeft}px`;
+          mascotCta.style.top = `${nextTop}px`;
+          mascotCta.style.right = 'auto';
+          mascotCta.style.bottom = 'auto';
+          mascotCta.style.transform = 'none';
+        };
+
+        const handlePointerMove = (event) => {
+          if (!dragState) return;
+
+          const moveDistance = Math.hypot(event.clientX - dragState.startX, event.clientY - dragState.startY);
+          if (moveDistance > 4) {
+            dragState.moved = true;
+          }
+
+          setDraggedPosition(event.clientX, event.clientY);
+        };
+
+        const handlePointerUp = () => {
+          if (!dragState) return;
+
+          mascotCta.classList.remove('is-dragging');
+          if (dragState.pointerId !== null && mascotCta.releasePointerCapture) {
+            mascotCta.releasePointerCapture(dragState.pointerId);
+          }
+
+          if (dragState.moved) {
+            suppressNextClick = true;
+          }
+
+          window.removeEventListener('pointermove', handlePointerMove);
+          window.removeEventListener('pointerup', handlePointerUp);
+          window.removeEventListener('pointercancel', handlePointerUp);
+          dragState = null;
+        };
+
+        const startDrag = (event) => {
+          if (!mascotCta.classList.contains('mascot-cta--active')) {
+            return;
+          }
+
+          if (event.isPrimary === false || (event.button !== undefined && event.button !== 0)) {
+            return;
+          }
+
+          event.preventDefault();
+
+          const ctaRect = mascotCta.getBoundingClientRect();
+          dragState = {
+            pointerId: event.pointerId,
+            offsetX: event.clientX - ctaRect.left,
+            offsetY: event.clientY - ctaRect.top,
+            startX: event.clientX,
+            startY: event.clientY,
+            moved: false,
+          };
+
+          mascotCta.classList.add('is-dragging');
+          if (mascotCta.setPointerCapture) {
+            mascotCta.setPointerCapture(event.pointerId);
+          }
+
+          window.addEventListener('pointermove', handlePointerMove);
+          window.addEventListener('pointerup', handlePointerUp);
+          window.addEventListener('pointercancel', handlePointerUp);
+
+          setDraggedPosition(event.clientX, event.clientY);
+        };
+
+        mascotCta.addEventListener('pointerdown', startDrag);
+        mascotCta.addEventListener('lostpointercapture', handlePointerUp);
+        mascotCta.addEventListener('click', (event) => {
+          if (!suppressNextClick) {
+            return;
+          }
+
+          suppressNextClick = false;
+          event.preventDefault();
+        });
 
         const activateMascot = () => {
           if (hasStarted) {
