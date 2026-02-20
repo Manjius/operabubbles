@@ -54,7 +54,7 @@
         inset: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         z-index: 2;
         opacity: 1;
         transition: opacity 0.6s ease;
@@ -884,7 +884,6 @@
 
         trailer.addEventListener('ended', hideTrailer);
         trailer.addEventListener('error', hideTrailer, { once: true });
-        window.setTimeout(hideTrailer, 12000);
         syncAudioButton();
       })();
     </script>
@@ -964,8 +963,8 @@
             flushQueue();
           },
           {
-            threshold: 0.35,
-            rootMargin: '0px 0px -10% 0px',
+            threshold: 0.15,
+            rootMargin: '0px 0px 20% 0px',
           }
         );
 
