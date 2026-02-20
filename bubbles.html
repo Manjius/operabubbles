@@ -49,23 +49,37 @@
         height: auto;
       }
 
-      .header-trailer {
-        position: absolute;
-        inset: 0;
+      .trailer-launch {
+        position: fixed;
+        top: 0.9rem;
+        right: 0.9rem;
+        z-index: 20;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 999px;
+        padding: 0.52rem 0.95rem;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+      }
+
+      .intro-trailer {
+        position: relative;
+      }
+
+      .intro-trailer__video {
+        display: block;
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        z-index: 2;
-        opacity: 1;
-        transition: opacity 0.6s ease;
+        aspect-ratio: 4 / 5;
+        min-height: 420px;
+        object-fit: cover;
+        cursor: pointer;
+        background: #000;
       }
 
-      .header-trailer.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .trailer-audio-toggle {
+      .intro-trailer__audio-toggle {
         position: absolute;
         right: 0.9rem;
         bottom: 0.9rem;
@@ -81,37 +95,6 @@
         display: grid;
         place-items: center;
         cursor: pointer;
-        opacity: 1;
-        transition: opacity 0.35s ease;
-      }
-
-      .trailer-audio-toggle.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .trailer-replay {
-        position: absolute;
-        left: 0.9rem;
-        bottom: 0.9rem;
-        z-index: 3;
-        border: 1px solid rgba(255, 255, 255, 0.65);
-        border-radius: 999px;
-        padding: 0.38rem 0.72rem;
-        font-family: var(--font-body);
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.5);
-        cursor: pointer;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.35s ease;
-      }
-
-      .trailer-replay.is-visible {
-        opacity: 1;
-        pointer-events: auto;
       }
 
       .page-title {
@@ -351,7 +334,8 @@
         width: 100%;
       }
 
-      .hero__media img {
+      .hero__media img,
+      .hero__media video {
         display: block;
         width: 100%;
         aspect-ratio: 4 / 5;
@@ -638,12 +622,9 @@
   <body>
     <div class="top-header-image">
       <img src="assets/header_image.jpg" alt="" />
-      <video class="header-trailer" autoplay muted playsinline preload="auto">
-        <source src="assets/obp.mp4" type="video/mp4" />
-      </video>
-      <button class="trailer-audio-toggle" type="button" aria-label="Unmute trailer" aria-pressed="false">🔇</button>
-      <button class="trailer-replay" type="button">▶ Play trailer</button>
     </div>
+
+    <button class="trailer-launch" type="button" data-trailer-launch>▶ Play trailer</button>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
       <a class="mascot-cta__bubble" href="https://shop.weeztix.com/f1709a7e-0b37-11f1-a9cb-7e126431635e/tickets" target="_blank" rel="noopener noreferrer"><strong>Secure your<br>ticket gurl!!</Strong></strong></a>
@@ -705,8 +686,18 @@
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
-        <div class="hero__media intro-section__media reveal-item" data-mobile-direction="left" data-desktop-direction="left">
-          <img src="assets/blok1_image.jpg" alt="Opera & Bubbles brunch guests enjoying an immersive performance" />
+        <div class="hero__media intro-section__media intro-trailer reveal-item" data-mobile-direction="left" data-desktop-direction="left" data-trailer-container>
+          <video
+            class="intro-trailer__video"
+            playsinline
+            preload="metadata"
+            muted
+            aria-label="Opera & Bubbles trailer"
+            data-intro-trailer
+          >
+            <source src="assets/obp.mp4" type="video/mp4" />
+          </video>
+          <button class="intro-trailer__audio-toggle" type="button" aria-label="Unmute trailer" aria-pressed="false" data-trailer-audio-toggle>🔇</button>
         </div>
 
         <div class="hero__content reveal-item" data-mobile-direction="right" data-desktop-direction="right">
@@ -838,12 +829,11 @@
 
     <script>
       (() => {
-        const trailer = document.querySelector('.header-trailer');
-        const audioToggle = document.querySelector('.trailer-audio-toggle');
-        const replayButton = document.querySelector('.trailer-replay');
-        if (!trailer || !audioToggle || !replayButton) return;
-
-        let hidden = false;
+        const trailer = document.querySelector('[data-intro-trailer]');
+        const audioToggle = document.querySelector('[data-trailer-audio-toggle]');
+        const launchButton = document.querySelector('[data-trailer-launch]');
+        const trailerContainer = document.querySelector('[data-trailer-container]');
+        if (!trailer || !audioToggle || !launchButton || !trailerContainer) return;
 
         const syncAudioButton = () => {
           const muted = trailer.muted;
@@ -852,44 +842,56 @@
           audioToggle.setAttribute('aria-label', muted ? 'Unmute trailer' : 'Mute trailer');
         };
 
-        const hideTrailer = () => {
-          if (hidden) return;
-          hidden = true;
-          trailer.pause();
-          trailer.classList.add('is-hidden');
-          audioToggle.classList.add('is-hidden');
-          replayButton.classList.add('is-visible');
-        };
+        const playTrailer = () => {
+          if (trailer.ended) {
+            trailer.currentTime = 0;
+          }
 
-        const tryPlayTrailer = () => {
           const playPromise = trailer.play();
           if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {
-              hideTrailer();
+              // Intentionally ignore autoplay restrictions.
             });
           }
         };
 
-        const showTrailer = () => {
-          hidden = false;
-          trailer.classList.remove('is-hidden');
-          audioToggle.classList.remove('is-hidden');
-          replayButton.classList.remove('is-visible');
-          trailer.currentTime = 0;
-          tryPlayTrailer();
-        };
+        trailer.addEventListener('loadedmetadata', () => {
+          const frameTime = Math.min(3, Math.max(trailer.duration - 0.1, 0));
+          trailer.currentTime = frameTime;
+          trailer.pause();
+        }, { once: true });
+
+        launchButton.addEventListener('click', () => {
+          trailerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          playTrailer();
+        });
 
         audioToggle.addEventListener('click', () => {
           trailer.muted = !trailer.muted;
           syncAudioButton();
         });
 
-        replayButton.addEventListener('click', showTrailer);
+        trailer.addEventListener('click', () => {
+          if (trailer.paused) {
+            playTrailer();
+            return;
+          }
 
-        trailer.addEventListener('ended', hideTrailer);
-        trailer.addEventListener('error', hideTrailer, { once: true });
+          trailer.pause();
+        });
+
+        const trailerObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              if (trailer.paused) playTrailer();
+            });
+          },
+          { threshold: 0.6 }
+        );
+
+        trailerObserver.observe(trailerContainer);
         syncAudioButton();
-        tryPlayTrailer();
       })();
     </script>
 
