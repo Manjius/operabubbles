@@ -375,8 +375,17 @@
             return;
           }
 
-          const isDesktopMouse = window.matchMedia('(min-width: 901px)').matches && event.pointerType === 'mouse';
-          if (!isDesktopMouse) {
+          const isDesktop = window.matchMedia('(min-width: 901px)').matches;
+          const isDesktopMouse = isDesktop && event.pointerType === 'mouse';
+          const isFromMascotImage = event.target instanceof Element && Boolean(event.target.closest('a[aria-label="Book a ticket"]'));
+
+          if (isDesktopMouse && !isFromMascotImage) {
+            return;
+          }
+
+          if (!isDesktopMouse && !isDesktop) {
+            // Mobile/tablet: allow dragging from anywhere on mascot CTA.
+          } else if (!isDesktopMouse) {
             return;
           }
 
@@ -384,7 +393,9 @@
             return;
           }
 
-          event.preventDefault();
+          if (event.pointerType === 'mouse') {
+            event.preventDefault();
+          }
 
           const ctaRect = mascotCta.getBoundingClientRect();
           dragState = {
@@ -408,9 +419,9 @@
           setDraggedPosition(event.clientX, event.clientY);
         };
 
-        mascotImageLink.addEventListener('pointerdown', startDrag);
+        mascotCta.addEventListener('pointerdown', startDrag);
         mascotCta.addEventListener('lostpointercapture', handlePointerUp);
-        mascotImageLink.addEventListener('click', (event) => {
+        mascotCta.addEventListener('click', (event) => {
           if (!suppressNextClick) {
             return;
           }
