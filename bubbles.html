@@ -49,23 +49,37 @@
         height: auto;
       }
 
-      .header-trailer {
+      .trailer-launch {
         position: absolute;
-        inset: 0;
+        left: 0.9rem;
+        bottom: 0.9rem;
+        z-index: 4;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 999px;
+        padding: 0.52rem 0.95rem;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+      }
+
+      .intro-trailer {
+        position: relative;
+      }
+
+      .intro-trailer__video {
+        display: block;
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        z-index: 2;
-        opacity: 1;
-        transition: opacity 0.6s ease;
+        aspect-ratio: 4 / 5;
+        min-height: 420px;
+        object-fit: cover;
+        cursor: pointer;
+        background: #000;
       }
 
-      .header-trailer.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .trailer-audio-toggle {
+      .intro-trailer__audio-toggle {
         position: absolute;
         right: 0.9rem;
         bottom: 0.9rem;
@@ -81,37 +95,17 @@
         display: grid;
         place-items: center;
         cursor: pointer;
-        opacity: 1;
-        transition: opacity 0.35s ease;
       }
 
-      .trailer-audio-toggle.is-hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .trailer-replay {
+      .intro-trailer__progress {
         position: absolute;
         left: 0.9rem;
-        bottom: 0.9rem;
+        right: 4.1rem;
+        bottom: 1.35rem;
         z-index: 3;
-        border: 1px solid rgba(255, 255, 255, 0.65);
-        border-radius: 999px;
-        padding: 0.38rem 0.72rem;
-        font-family: var(--font-body);
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.5);
+        margin: 0;
+        accent-color: #ffffff;
         cursor: pointer;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.35s ease;
-      }
-
-      .trailer-replay.is-visible {
-        opacity: 1;
-        pointer-events: auto;
       }
 
       .page-title {
@@ -351,7 +345,8 @@
         width: 100%;
       }
 
-      .hero__media img {
+      .hero__media img,
+      .hero__media video {
         display: block;
         width: 100%;
         aspect-ratio: 4 / 5;
@@ -525,8 +520,8 @@
 
       @media (min-width: 901px) {
         .top-header-image img {
-          margin-top: -40px;
-          margin-bottom: -400px;
+          margin-top: -150px;
+          margin-bottom: -100px;
         }
       }
 
@@ -637,12 +632,8 @@
   </head>
   <body>
     <div class="top-header-image">
-      <img src="assets/header_image.jpg" alt="" />
-      <video class="header-trailer" autoplay muted playsinline preload="auto">
-        <source src="assets/obp.mp4" type="video/mp4" />
-      </video>
-      <button class="trailer-audio-toggle" type="button" aria-label="Unmute trailer" aria-pressed="false">🔇</button>
-      <button class="trailer-replay" type="button">▶ Play trailer</button>
+      <img src="assets/header_image.jpeg" alt="" />
+      <button class="trailer-launch" type="button" data-trailer-launch>▶ Play trailer</button>
     </div>
 
     <div class="mascot-cta" aria-label="Booking reminder" data-mascot-cta>
@@ -705,8 +696,19 @@
 
     <section class="hero intro-section" aria-labelledby="intro-section-title">
       <div class="hero__grid">
-        <div class="hero__media intro-section__media reveal-item" data-mobile-direction="left" data-desktop-direction="left">
-          <img src="assets/blok1_image.jpg" alt="Opera & Bubbles brunch guests enjoying an immersive performance" />
+        <div class="hero__media intro-section__media intro-trailer reveal-item" data-mobile-direction="left" data-desktop-direction="left" data-trailer-container>
+          <video
+            class="intro-trailer__video"
+            controls
+            playsinline
+            preload="metadata"
+            muted
+            aria-label="Opera & Bubbles trailer"
+            data-intro-trailer
+          >
+            <source src="assets/obp.mp4" type="video/mp4" />
+          </video>
+
         </div>
 
         <div class="hero__content reveal-item" data-mobile-direction="right" data-desktop-direction="right">
@@ -804,7 +806,7 @@
       <div class="menu-links">
         <a
           class="menu-icon-link"
-          href="https://www.instagram.com/serious_case/?hl=en"
+          href="https://www.instagram.com/opera.and.bubbles/?hl=en"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram"
@@ -837,55 +839,98 @@
     </footer>
 
     <script>
-      (() => {
-        const trailer = document.querySelector('.header-trailer');
-        const audioToggle = document.querySelector('.trailer-audio-toggle');
-        const replayButton = document.querySelector('.trailer-replay');
-        if (!trailer || !audioToggle || !replayButton) return;
+    (() => {
+      const trailer = document.querySelector('[data-intro-trailer]');
+      const launchButton = document.querySelector('[data-trailer-launch]');
+      const trailerContainer = document.querySelector('[data-trailer-container]');
+      if (!trailer || !launchButton || !trailerContainer) return;
 
-        let hidden = false;
+      let userActivatedSound = false;
 
-        const syncAudioButton = () => {
-          const muted = trailer.muted;
-          audioToggle.textContent = muted ? '🔇' : '🔊';
-          audioToggle.setAttribute('aria-pressed', muted ? 'false' : 'true');
-          audioToggle.setAttribute('aria-label', muted ? 'Unmute trailer' : 'Mute trailer');
-        };
-
-        const hideTrailer = () => {
-          if (hidden) return;
-          hidden = true;
-          trailer.pause();
-          trailer.classList.add('is-hidden');
-          audioToggle.classList.add('is-hidden');
-          replayButton.classList.add('is-visible');
-        };
-
-        const showTrailer = () => {
-          hidden = false;
-          trailer.classList.remove('is-hidden');
-          audioToggle.classList.remove('is-hidden');
-          replayButton.classList.remove('is-visible');
-          trailer.currentTime = 0;
-          const playPromise = trailer.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {
-              hideTrailer();
-            });
+      const playMuted = async () => {
+        try {
+          if (!userActivatedSound) {
+            trailer.muted = true;
           }
-        };
+          const p = trailer.play();
+          if (p && typeof p.catch === 'function') {
+            await p;
+          }
+        } catch (err) {
+          // ignore autoplay restrictions
+        }
+      };
 
-        audioToggle.addEventListener('click', () => {
-          trailer.muted = !trailer.muted;
-          syncAudioButton();
-        });
+      const playWithSound = async () => {
+        try {
+          if (trailer.ended) trailer.currentTime = 0;
 
-        replayButton.addEventListener('click', showTrailer);
+          userActivatedSound = true;
+          trailer.muted = false;
+          trailer.volume = 1;
 
-        trailer.addEventListener('ended', hideTrailer);
-        trailer.addEventListener('error', hideTrailer, { once: true });
-        syncAudioButton();
-      })();
+          const p = trailer.play();
+          if (p && typeof p.catch === 'function') {
+            await p;
+          }
+        } catch (err) {
+          // ignore browser quirks
+        }
+      };
+
+      launchButton.addEventListener('click', async () => {
+        trailerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      try {
+          trailer.pause();
+          trailer.currentTime = 0;     // always restart
+          trailer.muted = false;       // user explicitly asked for sound
+          trailer.volume = 1;
+          userActivatedSound = true;   // keep this if you still use this flag elsewhere
+          await trailer.play();
+        } catch (err) {}
+      });
+
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+
+            // If user has not manually activated sound, autoplay muted
+            if (trailer.paused) {
+              playMuted();
+            }
+             return;
+          }
+            trailer.pause();
+            trailer.muted = true;
+            userActivatedSound = false;
+          });
+        },
+        {
+          threshold: 0.35,
+          rootMargin: '0px 0px 10% 0px',
+        }
+      );
+
+      observer.observe(trailerContainer);
+
+      // In case page loads already at trailer position, force an initial check
+      const tryInitialAutoplay = () => {
+        const rect = trailerContainer.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+        const visibleRatio = visibleHeight / Math.max(rect.height, 1);
+
+        if (visibleRatio > 0.35 && trailer.paused) {
+          playMuted();
+        }
+      };
+
+      window.addEventListener('load', tryInitialAutoplay, { once: true });
+      requestAnimationFrame(tryInitialAutoplay);
+    })();
     </script>
 
     <script>
