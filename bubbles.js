@@ -313,9 +313,10 @@
 
       (() => {
         const mascotCta = document.querySelector('[data-mascot-cta]');
+        const mascotImageLink = mascotCta?.querySelector('a[aria-label="Book a ticket"]');
         const headerImage = document.querySelector('.top-header-image');
 
-        if (!mascotCta || !headerImage) {
+        if (!mascotCta || !mascotImageLink || !headerImage) {
           return;
         }
 
@@ -374,6 +375,11 @@
             return;
           }
 
+          const isDesktopMouse = window.matchMedia('(min-width: 901px)').matches && event.pointerType === 'mouse';
+          if (!isDesktopMouse) {
+            return;
+          }
+
           if (event.isPrimary === false || (event.button !== undefined && event.button !== 0)) {
             return;
           }
@@ -402,9 +408,9 @@
           setDraggedPosition(event.clientX, event.clientY);
         };
 
-        mascotCta.addEventListener('pointerdown', startDrag);
+        mascotImageLink.addEventListener('pointerdown', startDrag);
         mascotCta.addEventListener('lostpointercapture', handlePointerUp);
-        mascotCta.addEventListener('click', (event) => {
+        mascotImageLink.addEventListener('click', (event) => {
           if (!suppressNextClick) {
             return;
           }

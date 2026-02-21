@@ -23,6 +23,7 @@
         position: relative;
         width: 100%;
         overflow: hidden;
+        background: #000;
       }
 
       .top-header-image img {
@@ -455,15 +456,19 @@
         left: 0;
         right: 0;
         bottom: 0;
+        width: 100%;
+        max-width: 100vw;
         z-index: 30;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
-        padding: 0.7rem 1rem;
+        padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
         background: #000;
         color: var(--hero-bg);
         border-top: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateZ(0);
+        overflow: hidden;
       }
 
       .menu-links {
@@ -491,7 +496,7 @@
         font-size: 0.84rem;
         line-height: 1.35;
         text-align: right;
-        max-width: 68ch;
+        max-width: 52ch;
         color: var(--hero-bg);
       }
 
@@ -501,9 +506,16 @@
 
 
       @media (min-width: 901px) {
+        .top-header-image {
+          display: flex;
+          justify-content: center;
+        }
+
         .top-header-image img {
-          margin-top: -150px;
-          margin-bottom: -100px;
+          width: 70%;
+          max-width: 1100px;
+          margin-top: 0;
+          margin-bottom: 0;
         }
       }
 
@@ -548,23 +560,30 @@
         }
 
         body {
-          padding-bottom: 7rem;
+          padding-bottom: calc(7rem + env(safe-area-inset-bottom));
         }
 
         .fixed-menu {
-          display: flex;               /* in case it isn’t already */
-          flex-direction: row;         /* key change */
-          align-items: center;         /* vertical align */
-          justify-content: space-between;
-          gap: 0.8rem;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 0.55rem;
           padding: 0.7rem 0.85rem;
         }
 
+        .menu-links {
+          gap: 0.45rem;
+          flex: 0 0 auto;
+        }
+
         .menu-message {
-          margin:0;
-          flex:1 1 auto;          /* text takes remaining space */
-          text-align:right;
-          min-width:0;            /* allows wrapping instead of pushing layout */
+          margin: 0;
+          flex: 0 1 32ch;
+          text-align: left;
+          min-width: 0;
+          font-size: 0.78rem;
+          line-height: 1.3;
         }
 
       .event-meta__item:nth-child(odd),
