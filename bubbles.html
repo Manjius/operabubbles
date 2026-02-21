@@ -509,8 +509,8 @@
 
       @media (min-width: 901px) {
         .top-header-image img {
-          margin-top: -40px;
-          margin-bottom: -400px;
+          margin-top: -150px;
+          margin-bottom: -100px;
         }
       }
 
@@ -621,7 +621,7 @@
   </head>
   <body>
     <div class="top-header-image">
-      <img src="assets/header_image.jpg" alt="" />
+      <img src="assets/header_image.jpeg" alt="" />
       <button class="trailer-launch" type="button" data-trailer-launch>▶ Play trailer</button>
     </div>
 
@@ -688,6 +688,7 @@
         <div class="hero__media intro-section__media intro-trailer reveal-item" data-mobile-direction="left" data-desktop-direction="left" data-trailer-container>
           <video
             class="intro-trailer__video"
+            controls
             playsinline
             preload="metadata"
             muted
@@ -696,7 +697,7 @@
           >
             <source src="assets/obp.mp4" type="video/mp4" />
           </video>
-          <button class="intro-trailer__audio-toggle" type="button" aria-label="Unmute trailer" aria-pressed="false" data-trailer-audio-toggle>🔇</button>
+          
         </div>
 
         <div class="hero__content reveal-item" data-mobile-direction="right" data-desktop-direction="right">
@@ -794,7 +795,7 @@
       <div class="menu-links">
         <a
           class="menu-icon-link"
-          href="https://www.instagram.com/serious_case/?hl=en"
+          href="https://www.instagram.com/opera.and.bubbles/?hl=en"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram"
@@ -827,71 +828,97 @@
     </footer>
 
     <script>
-      (() => {
-        const trailer = document.querySelector('[data-intro-trailer]');
-        const audioToggle = document.querySelector('[data-trailer-audio-toggle]');
-        const launchButton = document.querySelector('[data-trailer-launch]');
-        const trailerContainer = document.querySelector('[data-trailer-container]');
-        if (!trailer || !audioToggle || !launchButton || !trailerContainer) return;
+    (() => {
+      const trailer = document.querySelector('[data-intro-trailer]');
+      const launchButton = document.querySelector('[data-trailer-launch]');
+      const trailerContainer = document.querySelector('[data-trailer-container]');
+      if (!trailer || !launchButton || !trailerContainer) return;
 
-        const syncAudioButton = () => {
-          const muted = trailer.muted;
-          audioToggle.textContent = muted ? '🔇' : '🔊';
-          audioToggle.setAttribute('aria-pressed', muted ? 'false' : 'true');
-          audioToggle.setAttribute('aria-label', muted ? 'Unmute trailer' : 'Mute trailer');
-        };
+      let userActivatedSound = false;
 
-        const playTrailer = () => {
-          if (trailer.ended) {
-            trailer.currentTime = 0;
+      const playMuted = async () => {
+        try {
+          if (!userActivatedSound) {
+            trailer.muted = true;
           }
-
-          const playPromise = trailer.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {
-              // Intentionally ignore autoplay restrictions.
-            });
+          const p = trailer.play();
+          if (p && typeof p.catch === 'function') {
+            await p;
           }
-        };
+        } catch (err) {
+          // ignore autoplay restrictions
+        }
+      };
 
-        trailer.addEventListener('loadedmetadata', () => {
-          const frameTime = Math.min(3, Math.max(trailer.duration - 0.1, 0));
-          trailer.currentTime = frameTime;
+      const playWithSound = async () => {
+        try {
+          if (trailer.ended) trailer.currentTime = 0;
+
+          userActivatedSound = true;
+          trailer.muted = false;
+          trailer.volume = 1;
+
+          const p = trailer.play();
+          if (p && typeof p.catch === 'function') {
+            await p;
+          }
+        } catch (err) {
+          // ignore browser quirks
+        }
+      };
+
+      launchButton.addEventListener('click', async () => {
+        trailerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      try {
           trailer.pause();
-        }, { once: true });
+          trailer.currentTime = 0;     // always restart
+          trailer.muted = false;       // user explicitly asked for sound
+          trailer.volume = 1;
+          userActivatedSound = true;   // keep this if you still use this flag elsewhere
+          await trailer.play();
+        } catch (err) {}
+      });
 
-        launchButton.addEventListener('click', () => {
-          trailerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          playTrailer();
-        });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
 
-        audioToggle.addEventListener('click', () => {
-          trailer.muted = !trailer.muted;
-          syncAudioButton();
-        });
-
-        trailer.addEventListener('click', () => {
-          if (trailer.paused) {
-            playTrailer();
-            return;
+            // If user has not manually activated sound, autoplay muted
+            if (trailer.paused) {
+              playMuted();
+            }
+             return;
           }
+            trailer.pause();
+            trailer.muted = true;
+            userActivatedSound = false;
+          });
+        },
+        {
+          threshold: 0.35,
+          rootMargin: '0px 0px 10% 0px',
+        }
+      );
 
-          trailer.pause();
-        });
+      observer.observe(trailerContainer);
 
-        const trailerObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              if (trailer.paused) playTrailer();
-            });
-          },
-          { threshold: 0.6 }
-        );
+      // In case page loads already at trailer position, force an initial check
+      const tryInitialAutoplay = () => {
+        const rect = trailerContainer.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+        const visibleRatio = visibleHeight / Math.max(rect.height, 1);
 
-        trailerObserver.observe(trailerContainer);
-        syncAudioButton();
-      })();
+        if (visibleRatio > 0.35 && trailer.paused) {
+          playMuted();
+        }
+      };
+
+      window.addEventListener('load', tryInitialAutoplay, { once: true });
+      requestAnimationFrame(tryInitialAutoplay);
+    })();
     </script>
 
     <script>
