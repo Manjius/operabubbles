@@ -1,8 +1,7 @@
     (() => {
       const trailer = document.querySelector('[data-intro-trailer]');
-      const launchButton = document.querySelector('[data-trailer-launch]');
       const trailerContainer = document.querySelector('[data-trailer-container]');
-      if (!trailer || !launchButton || !trailerContainer) return;
+      if (!trailer || !trailerContainer) return;
 
       let userActivatedSound = false;
 
@@ -36,19 +35,6 @@
           // ignore browser quirks
         }
       };
-
-      launchButton.addEventListener('click', async () => {
-        trailerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      try {
-          trailer.pause();
-          trailer.currentTime = 0;     // always restart
-          trailer.muted = false;       // user explicitly asked for sound
-          trailer.volume = 1;
-          userActivatedSound = true;   // keep this if you still use this flag elsewhere
-          await trailer.play();
-        } catch (err) {}
-      });
 
 
       const observer = new IntersectionObserver(
@@ -314,9 +300,8 @@
       (() => {
         const mascotCta = document.querySelector('[data-mascot-cta]');
         const mascotImageLink = mascotCta?.querySelector('a[aria-label="Book a ticket"]');
-        const headerImage = document.querySelector('.top-header-image');
 
-        if (!mascotCta || !mascotImageLink || !headerImage) {
+        if (!mascotCta || !mascotImageLink) {
           return;
         }
 
@@ -449,9 +434,9 @@
         };
 
         const checkScrollPosition = () => {
-          const pastHeaderImage = window.scrollY > headerImage.offsetHeight;
+          const pastIntroThreshold = window.scrollY > 220;
 
-          if (pastHeaderImage) {
+          if (pastIntroThreshold) {
             activateMascot();
             window.removeEventListener('scroll', checkScrollPosition);
           }
