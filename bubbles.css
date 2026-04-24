@@ -610,6 +610,14 @@
           order: 2;
         }
 
+        .intro-section .hero__media {
+          order: 1;
+        }
+
+        .intro-section .hero__content {
+          order: 2;
+        }
+
         .hero__content {
           width: 100%;
         }
