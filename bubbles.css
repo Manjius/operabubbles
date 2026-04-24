@@ -56,14 +56,17 @@
 
       .intro-trailer {
         position: relative;
+        width: min(100%, 420px);
+        margin: 0 auto;
+        background: #000;
       }
 
       .intro-trailer__video {
         display: block;
         width: 100%;
-        aspect-ratio: 4 / 5;
-        min-height: 420px;
-        object-fit: cover;
+        aspect-ratio: 9 / 16;
+        min-height: 0;
+        object-fit: contain;
         cursor: pointer;
         background: #000;
       }
@@ -342,7 +345,11 @@
         min-height: 420px;
         object-fit: cover;
       }
-
+      .hero__media .intro-trailer__video {
+        aspect-ratio: 9 / 16;
+        min-height: 0;
+        object-fit: contain;
+      }
       .hero__content {
         width: min(560px, 100%);
         justify-self: center;
