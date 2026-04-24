@@ -483,11 +483,42 @@
         line-height: 1.45;
       }
 
+      .review-card__text--expandable {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+      }
+
+      .review-card--expanded .review-card__text--expandable {
+        display: block;
+        -webkit-line-clamp: unset;
+        overflow: visible;
+      }
+
       .review-card__author {
         margin: 0.7rem 0 0;
         font-family: var(--font-heading);
         font-size: 1rem;
         color: #3c2c13;
+      }
+
+      .review-card__toggle {
+        margin-top: 0.65rem;
+        border: 1px solid rgba(111, 87, 39, 0.45);
+        background: rgba(255, 255, 255, 0.8);
+        color: #5a4219;
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        font-family: var(--font-body);
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .review-card__toggle:hover,
+      .review-card__toggle:focus-visible {
+        background: rgba(255, 255, 255, 1);
       }
 
 
