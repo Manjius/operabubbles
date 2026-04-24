@@ -445,3 +445,19 @@
         window.addEventListener('scroll', checkScrollPosition, { passive: true });
         checkScrollPosition();
       })();
+
+      (() => {
+        const toggleButtons = Array.from(document.querySelectorAll('[data-review-toggle]'));
+        if (!toggleButtons.length) return;
+
+        toggleButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const reviewCard = button.closest('.review-card--expandable');
+            if (!reviewCard) return;
+
+            const isExpanded = reviewCard.classList.toggle('review-card--expanded');
+            button.setAttribute('aria-expanded', String(isExpanded));
+            button.textContent = isExpanded ? 'Show less' : 'Read full review';
+          });
+        });
+      })();
